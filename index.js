@@ -33,26 +33,32 @@ App.get("/", (req, res) => {
 });
 
 // select specific user to show
-App.get("/User/:id", (req, res) => {
-	const userID = req.params.id;
-	const query = "SELECT * FROM `users` WHERE id = ?";
-	connection.execute(query, [userID], (err, data) => {
-		if (err) res.send(`ERROR: ${err}`);
-		else res.send(data);
-	});
-});
+App.get( "/login", ( req, res ) =>
+{
+	const { email, password } = req.body;
+	const values = [ email, password ];
+	let query = "SELECT email FROM `users` WHERE `email` = ?";
+	connection.execute( query, [ email ], ( err, data ) =>
+	{
+		if ( err ) res.send( `ERROR: ${ err }` );
+		else if ( 0 == data.length ) res.send( "ERROR: this mail not exists" );
+		else
+		{
+			res.send("login successfully")
+		}
+	} );
+} );
 
 // Handle POST requests to add users
 App.post("/User/Add", (req, res) => {
-	const { username, email, password } = req.body;
-	const values = [username, email, password];
+	const { email, password } = req.body;
+	const values = [email, password];
 	let query = "SELECT email FROM `users` WHERE `email` = ?";
 	connection.execute(query, [email], (err, data) => {
 		if (err) res.send(`ERROR: ${err}`);
 		else if (0 < data.length) res.send("ERROR: this mail exists");
 		else {
-			query =
-				"INSERT INTO `users`(`username`, `email`, `password`) VALUES (?, ?, ?)";
+			query = "INSERT INTO `users`(`username`, `email`, `password`) VALUES (?, ?, ?)";
 			connection.execute(query, values, (err) => {
 				if (err) res.send(`ERROR: ${err}`);
 				else {
