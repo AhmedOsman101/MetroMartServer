@@ -75,10 +75,10 @@ App.delete("/User/Delete/:id", (req, res) => {
 	const userID = req.params.id;
 	const query = "DELETE FROM `users` WHERE id = ?";
 	connection.execute(query, [userID], (err, data) => {
-		if (err) res.send(`ERROR: ${err}`);
-		else if (data.affectedRows === 0)
-			res.send("ERROR: USER WAS NOT FOUND !!!");
-		else res.send("USER DELETED SUCCESSFULLY");
+		if ( err ) res.send( `ERROR: ${ err }` );
+		else if ( data.affectedRows === 0 )
+			res.send( "ERROR: USER WAS NOT FOUND !!!" );
+		else res.send( "USER DELETED SUCCESSFULLY" );
 	});
 });
 
