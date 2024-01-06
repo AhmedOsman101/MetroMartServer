@@ -24,7 +24,7 @@ const connection = sql.createConnection({
 });
 
 // Show all users
-App.get("/", (req, res) => {
+App.get("/data", (req, res) => {
 	const query = "SELECT * FROM `users`";
 	connection.execute(query, (err, data) => {
 		if (err) res.send(`ERROR: ${err}`);
