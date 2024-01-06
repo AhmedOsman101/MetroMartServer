@@ -33,7 +33,7 @@ App.get("/", (req, res) => {
 });
 
 // select specific user to show
-App.get( "/login", ( req, res ) =>
+App.post( "/login", ( req, res ) =>
 {
 	const { email, password } = req.body;
 	const values = [ email, password ];
