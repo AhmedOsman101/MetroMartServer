@@ -50,7 +50,7 @@ const validateEgyptianPhoneNumber = ( phoneNumber ) =>
 ///////////////////////////////    Users functions    ///////////////////////////////////
 App.get( "/", ( req, res ) => // function to show all users from database
 {
-	if (Allowed_ips.indexOf(req.ip)!== -1) {
+	if (Admins_ip.indexOf(req.ip)!== -1) {
 		const query = "SELECT * FROM `users`";
 		connection.execute( query, ( err, data ) =>
 		{
@@ -63,21 +63,27 @@ App.get( "/", ( req, res ) => // function to show all users from database
 	
 });
 
-// select specific user to show
-App.post( "/login", ( req, res ) =>
+
+App.post( "/login", ( req, res ) =>// login function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
 		const { email, password } = req.body;
 		const values = [ email, password ];
-		let query = "SELECT email FROM `users` WHERE `email` = ?";
+		let query = "SELECT email , password FROM `users` WHERE `email` = ?";
 		connection.execute( query, [ email ], ( err, data ) =>
 		{
 			if ( err ) res.send( `ERROR: ${ err }` );
-			else if ( 0 == data.length ) res.send( "ERROR: this mail doesn't exist" );
+			else if (data.length == 0 ) res.send( "ERROR: this mail doesn't exist" );
 			else
 			{
-				res.send( "login successfully" );
+				if (data[0]["password"] === password) {
+					res.send("login successully")
+				}
+				else
+				{
+					res.send("wrong password")
+				}
 			}
 		});
 	} else {
@@ -85,8 +91,8 @@ App.post( "/login", ( req, res ) =>
 	}
 });
 
-// Handle POST requests to add users
-App.post( "/User/Add", ( req, res ) =>
+
+App.post( "/User/Add", ( req, res ) => //signup function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
