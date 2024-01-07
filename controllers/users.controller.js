@@ -61,7 +61,7 @@ const signup = ( req, res ) => //signup function
             connection.execute( query, [ email ], ( err, data ) =>
             {
                 if ( err ) res.send( `ERROR: ${ err }` );
-                else if ( data.length != 0 ) res.send( "ERROR: this email exists" );
+                else if ( data.length != 0 ) res.send( "ERROR: this email is exists" );
                 else
                 {
                     query =
@@ -131,18 +131,41 @@ const updateAccount = ( req, res ) =>
 {
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
     {
-        const userID = req.params.id;
-        const { username, email, password } = req.body;
-        const values = [ username, email, password, userID ];
-        const query =
-            "UPDATE `users` SET `username` = ?, `email` = ?, `password` = ? WHERE `id` = ?";
-        connection.execute( query, values, ( err, data ) =>
+        const errors = validationResult( req );
+        if ( errors.isEmpty() )
         {
-            if ( err ) res.send( `ERROR: ${ err }` );
-            else if ( data.affectedRows === 0 )
-                res.send( "ERROR: USER WAS NOT FOUND !!!" );
-            else res.send( "USER UPDATED SUCCESSFULLY" );
-        } );
+            const { name, email, password, address1, address2, phone_number, gender, age } = req.body;
+
+            let query = "SELECT email FROM `users` WHERE `email` = ?";
+            connection.execute( query, [ email ], ( err, data ) =>
+            {
+                if ( err ) res.send( `ERROR: ${ err }` );
+                else if ( data.length != 0 ) res.send( "ERROR: this email exists" );
+                else
+                {
+                    query =
+                        "INSERT INTO `users`(`name`, `email`, `password`, `address1`, `address2`, `phone_number`,`gender`, `age`) VALUES (?,?,?,?,?,?,?,?)";
+                    connection.execute( query,
+                        [ name, email, password, address1, address2 ? address2 : null, phone_number, gender, age ],
+                        ( err, data ) =>
+                        {
+                            if ( err )
+                            {
+                                res.send( err );
+                            } else
+                            {
+                                res.send( "sign up successfully" );
+                            }
+                        }
+                    );
+
+
+                }
+            } );
+        } else
+        {
+            res.status( 400 ).send( errors.array()[ 0 ][ 'msg' ] );
+        }
     } else
     {
         res.status( 401 ).send( "authentication refused" );
