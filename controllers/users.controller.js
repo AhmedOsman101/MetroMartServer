@@ -1,6 +1,5 @@
 /*database connection*/
 const {
-	port,
 	Admins_ip,
 	Allowed_ips,
 	connection,

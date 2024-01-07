@@ -2,7 +2,7 @@
 const express = require("express");
 const App = express();
 App.use(express.json());
-const port = 5011;
+const port = process.env.PORT || 5011; // the port on which the server will start
 
 ///////////////////////////////    Users functions    ///////////////////////////////////
 const usersRouter = require("./routes/users.route");
