@@ -66,12 +66,12 @@ App.get( "/", ( req, res ) => // function to show all users from database
 } );
 
 
-App.post( "/login", ( req, res ) =>// login function
+App.post( "/user/login", ( req, res ) =>// login function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
 		const { email, password } = req.body;
-		const values = [ email, password ];
+		
 		let query = "SELECT email , password FROM `users` WHERE `email` = ?";
 		connection.execute( query, [ email ], ( err, data ) =>
 		{
@@ -96,7 +96,7 @@ App.post( "/login", ( req, res ) =>// login function
 } );
 
 
-App.post( "/user/add", ( req, res ) => //signup function
+App.post( "/user/signup", ( req, res ) => //signup function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
@@ -153,18 +153,33 @@ App.post( "/user/add", ( req, res ) => //signup function
 
 
 // Handle DELETE requests to remove users
-App.delete( "/User/Delete/:id", ( req, res ) =>
+App.delete( "/user/deleteaccount", ( req, res ) =>
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
-		const userID = req.params.id;
-		const query = "DELETE FROM `users` WHERE id = ?";
-		connection.execute( query, [ userID ], ( err, data ) =>
+		const { email, password } = req.body;
+
+		let query = "SELECT email , password FROM `users` WHERE `email` = ?";
+		connection.execute( query, [ email ], ( err, data ) =>
 		{
 			if ( err ) res.send( `ERROR: ${ err }` );
-			else if ( data.affectedRows === 0 )
-				res.send( "ERROR: USER WAS NOT FOUND !!!" );
-			else res.send( "USER DELETED SUCCESSFULLY" );
+			else if ( data.length == 0 ) res.send( "ERROR: this mail doesn't exist" );
+			else
+			{
+				if ( data[ 0 ][ "password" ] === password )
+				{
+					query = "DELETE FROM `users` WHERE email = ?"
+					connection.execute( query, [ email ], ( err, data ) =>
+					{
+						if ( err ) res.end( "Error" + err )
+						else res.end("account deleted successfully")
+					})
+				}
+				else
+				{
+					res.send( "wrong password" );
+				}
+			}
 		} );
 	} else
 	{
@@ -172,8 +187,9 @@ App.delete( "/User/Delete/:id", ( req, res ) =>
 	}
 } );
 
+
 // Handle PUT requests to update users
-App.put( "/User/Update/:id", ( req, res ) =>
+App.put( "/user/updateaccount/:id", ( req, res ) =>
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
