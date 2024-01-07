@@ -6,16 +6,14 @@ const cors = require("cors");
 const port = process.env.PORT || 5011; // the port on which the server will start
 // first method (with require):
 require("dotenv").config();
-
-// print the values:
 const DB_HOST = process.env.DB_HOST;
 const DB_NAME = process.env.DB_NAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_USER = process.env.DB_USER;
 const Allowed_ip = process.env.ALLOWED_IP;
+const Admins_ip = process.env.ADMINS_IP
 
 const Allowed_ips = JSON.parse( Allowed_ip );
-
 const App = express(); // Create a new Express application
 App.use(express.json()); // Use express.json() middleware for parsing JSON data of incoming requests
 App.use(cors());
@@ -24,43 +22,72 @@ const connection = sql.createConnection({
 	user: DB_USER,
 	password: DB_PASSWORD,
 	database: DB_NAME,
-});
+} );
 
 
-
-
-
-// Show all users
-App.get( "/", ( req, res ) =>
+/////////////////////    Validate Functions    ///////////////////////////////
+const validateEmail = ( email ) =>
 {
-	if (Allowed_ips.indexOf(req.ip)!== -1) {
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return emailRegex.test( email );
+};
+
+const validatePassword = ( password ) =>
+{
+	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+	return passwordRegex.test( password );
+};
+
+const validateEgyptianPhoneNumber = ( phoneNumber ) =>
+{
+	const egyptianPhoneNumberRegex = /^(?:(?:\+?20)|0)?(10|11|12|15|16|17|18|19)([0-9]{8})$/;
+	return egyptianPhoneNumberRegex.test( phoneNumber );
+};
+
+
+
+
+
+///////////////////////////    USERS start   ///////////////////////////////////////////////////
+
+App.get( "/", ( req, res ) => // function to get all users from database
+{
+	if ( Admins_ip.indexOf( req.ip ) !== -1 )
+	{
 		const query = "SELECT * FROM `users`";
 		connection.execute( query, ( err, data ) =>
 		{
 			if ( err ) res.send( `ERROR: ${ err }` );
 			else res.json( data );
 		} );
-	} else{
-		res.status( 401 ).send("authentication refused")
+	} else
+	{
+		res.status( 401 ).send( "authentication refused" );
 	}
-	
-});
 
-// select specific user to show
-App.post( "/login", ( req, res ) =>
+} );
+
+
+App.post( "/login", ( req, res ) => //login function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
 		const { email, password } = req.body;
 		const values = [ email, password ];
-		let query = "SELECT email FROM `users` WHERE `email` = ?";
+		let query = "SELECT email , password FROM `users` WHERE `email` = ?";
+
 		connection.execute( query, [ email ], ( err, data ) =>
 		{
 			if ( err ) res.send( `ERROR: ${ err }` );
-			else if ( 0 == data.length ) res.send( "ERROR: this mail doesn't exist" );
+			else if ( data.length == 0 ) res.send( "ERROR: this mail doesn't exist" );
 			else
 			{
-				res.send( "login successfully" );
+				if ( data[ 0 ][ "password" ]  === password) {
+					res.send("login successfully")
+				} else
+				{
+					res.send("wrong password")
+				}
 			}
 		} );
 	} else
@@ -70,8 +97,8 @@ App.post( "/login", ( req, res ) =>
 	
 });
 
-// Handle POST requests to add users
-App.post( "/User/Add", ( req, res ) =>
+
+App.post( "/User/Add", ( req, res ) => // signup function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
@@ -156,6 +183,17 @@ App.put( "/User/Update/:id", ( req, res ) =>
 App.use((req, res) => {
 	res.end("ERROR-404 Page Was Not Found"); // Send back an error message as a response
 });
+
+///////////////////////////    USERS end   ///////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 // Start the server and have it listen on the specified port
 App.listen(port, () => {
