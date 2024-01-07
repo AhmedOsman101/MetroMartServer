@@ -25,12 +25,30 @@ const connection = sql.createConnection({
 	database: DB_NAME,
 });
 
+//////////////////////////////    validation functions		/////////////////////////////////
+const validateEmail = ( email ) =>
+{
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return emailRegex.test( email );
+};
+
+const validatePassword = ( password ) =>
+{
+	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+	return passwordRegex.test( password );
+};
+
+const validateEgyptianPhoneNumber = ( phoneNumber ) =>
+{
+	const egyptianPhoneNumberRegex = /^(?:(?:\+?20)|0)?(10|11|12|15|16|17|18|19)([0-9]{8})$/;
+	return egyptianPhoneNumberRegex.test( phoneNumber );
+};
 
 
 
 
-// Show all users
-App.get( "/", ( req, res ) =>
+///////////////////////////////    Users functions    ///////////////////////////////////
+App.get( "/", ( req, res ) => // function to show all users from database
 {
 	if (Allowed_ips.indexOf(req.ip)!== -1) {
 		const query = "SELECT * FROM `users`";
