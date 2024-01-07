@@ -140,13 +140,13 @@ const updateAccount = ( req, res ) =>
             connection.execute( query, [ email ], ( err, data ) =>
             {
                 if ( err ) res.send( `ERROR: ${ err }` );
-                else if ( data.length != 0 ) res.send( "ERROR: this email exists" );
+                else if ( data.length == 0 ) res.send( "ERROR: this email is not exists" );
                 else
                 {
                     query =
-                        "INSERT INTO `users`(`name`, `email`, `password`, `address1`, `address2`, `phone_number`,`gender`, `age`) VALUES (?,?,?,?,?,?,?,?)";
+                        "UPDATE `users` SET `name`=?,`email`=?,`password`=?,`address1`=?,`address2`=?,`phone_number`=?,`gender`=?,`age`= ? WHERE email = ?";
                     connection.execute( query,
-                        [ name, email, password, address1, address2 ? address2 : null, phone_number, gender, age ],
+                        [ name, email, password, address1, address2 ? address2 : null, phone_number, gender, age, email ],
                         ( err, data ) =>
                         {
                             if ( err )
@@ -154,7 +154,7 @@ const updateAccount = ( req, res ) =>
                                 res.send( err );
                             } else
                             {
-                                res.send( "sign up successfully" );
+                                res.send( "update account successfully" );
                             }
                         }
                     );

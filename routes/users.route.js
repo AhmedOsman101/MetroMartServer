@@ -37,7 +37,27 @@ router.delete( "/user/deleteaccount", usersController.deleteAccount );
 
 
 // Handle PUT requests to update users
-router.put( "/user/updateaccount/:id", usersController.updateAccount );
+router.put( "/user/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+    body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
+    body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
+    body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
+    body( "phone_number" ).notEmpty().isMobilePhone().withMessage( "invalid phone_number" ),
+    body( "gender" ).custom( ( value ) =>
+    {
+        if ( value !== "male" && value !== "female" )
+        {
+            throw new Error( "gender must be either 'male' or 'female'" );
+        }
+        return true;
+    } ),
+    body( "age" ).custom( ( value ) =>
+    {
+        if ( value < 18 )
+        {
+            throw new Error( "age must be at least 18" );
+        }
+        return true;
+    } ), usersController.updateAccount );
 
 // handle any other requests
 router.use( ( req, res ) =>
