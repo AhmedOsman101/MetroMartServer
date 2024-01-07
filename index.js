@@ -1,51 +1,16 @@
-/* eslint-disable no-undef */
+/* import Express */
 const express = require( "express" );
-const sql = require( "mysql2" );
-// const bodyParser = require("body-parser");
-const cors = require( "cors" );
-const port = process.env.PORT || 5011; // the port on which the server will start
-// first method (with require):
-require( "dotenv" ).config();
-const DB_HOST = process.env.DB_HOST;
-const DB_NAME = process.env.DB_NAME;
-const DB_PASSWORD = process.env.DB_PASSWORD;
-const DB_USER = process.env.DB_USER;
-const Allowed_ip = process.env.ALLOWED_IP;
-const Admins_ip = process.env.ADMINS_IP;
+const App = express();
+App.use( express.json() );
+/*database connection*/
+const {port,Admins_ip, Allowed_ips,connection} = require( "./data/databaseconn" );
 
-const Allowed_ips = JSON.parse( Allowed_ip );
 
-const App = express(); // Create a new Express application
-App.use( express.json() ); // Use express.json() middleware for parsing JSON data of incoming requests
-App.use( cors() );
-const connection = sql.createConnection( {
-	host: DB_HOST,
-	user: DB_USER,
-	password: DB_PASSWORD,
-	database: DB_NAME,
-} );
+
+
 
 //////////////////////////////    validation functions		/////////////////////////////////
 const { body, validationResult } = require( 'express-validator' );
-
-const validateEmail = ( email ) =>
-{
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return emailRegex.test( email );
-};
-
-const validatePassword = ( password ) =>
-{
-	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-	return passwordRegex.test( password );
-};
-
-const validateEgyptianPhoneNumber = ( phoneNumber ) =>
-{
-	const egyptianPhoneNumberRegex = /^(?:(?:\+?20)|0)?(10|11|12|15)([0-9]{8})$/;
-	return egyptianPhoneNumberRegex.test( phoneNumber );
-};
-
 
 
 
