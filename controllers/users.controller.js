@@ -35,7 +35,7 @@ const login = (
 				res.send("ERROR: this mail doesn't exist");
 			else {
 				if (data[0]["password"] === password) {
-					res.send("login successully");
+					res.send("login successfully");
 				} else {
 					res.send("wrong password");
 				}

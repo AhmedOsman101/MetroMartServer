@@ -35,11 +35,11 @@ router.post(
 );
 
 // Handle DELETE requests to remove users
-router.delete("/user/deleteaccount", usersController.deleteAccount);
+router.delete("/user/deleteAccount", usersController.deleteAccount);
 
 // Handle PUT requests to update users
 router.put(
-	"/user/updateaccount",
+	"/user/updateAccount",
 	body("name").notEmpty().withMessage("name cannot be empty"),
 	body("email").notEmpty().withMessage("email is required").isEmail(),
 	body("password").notEmpty().isStrongPassword().withMessage("weak password"),
@@ -50,7 +50,7 @@ router.put(
 	body("phone_number")
 		.notEmpty()
 		.isMobilePhone()
-		.withMessage("invalid phone_number"),
+		.withMessage("invalid phone number"),
 	body("gender").custom((value) => {
 		if (value !== "male" && value !== "female") {
 			throw new Error("gender must be either 'male' or 'female'");
