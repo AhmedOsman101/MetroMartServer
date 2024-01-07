@@ -145,7 +145,7 @@ App.post( "/user/signup",
 								res.send(err)
 							} else
 							{
-								res.send("sign up successfully")
+								res.send( "sign up successfully" )
 							}
 						}
 					)
