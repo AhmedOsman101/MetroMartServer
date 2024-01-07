@@ -26,6 +26,8 @@ const connection = sql.createConnection( {
 } );
 
 //////////////////////////////    validation functions		/////////////////////////////////
+const { body, validationResult } = require( 'express-validator' );
+
 const validateEmail = ( email ) =>
 {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -96,52 +98,64 @@ App.post( "/user/login", ( req, res ) =>// login function
 } );
 
 
-App.post( "/user/signup", ( req, res ) => //signup function
+App.post( "/user/signup",
+	body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+	body( "email" ).notEmpty().withMessage("email is required").isEmail(),
+	body( "password" ).notEmpty().isStrongPassword().withMessage("weak password"),
+	body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
+	body( "phone_number" ).notEmpty().isMobilePhone().withMessage( "invalid phone_number" ),
+	body( "gender" ).custom( ( value ) =>
+	{
+		if ( value !== "male" && value !== "female" )
+		{
+			throw new Error( "gender must be either 'male' or 'female'" );
+		}
+		return true;
+	} ),
+	body( "age" ).custom( ( value ) =>
+	{
+		if ( value < 18 )
+		{
+			throw new Error( "age must be at least 18" );
+		}
+		return true;
+	} ),
+	( req, res ) => //signup function
 {
 	if ( Allowed_ips.indexOf( req.ip ) !== -1 )
 	{
-		const { name, email, password, address1, address2, phone_number, gender, age } = req.body;
+		const errors = validationResult( req )
+		if (errors.isEmpty()) {
+			const { name, email, password, address1, address2, phone_number, gender, age } = req.body;
 
-		let query = "SELECT email FROM `users` WHERE `email` = ?";
-		connection.execute( query, [ email ], ( err, data ) =>
-		{
-			if ( err ) res.send( `ERROR: ${ err }` );
-			else if ( data.length != 0 ) res.send( "ERROR: this email exists" );
-			else
+			let query = "SELECT email FROM `users` WHERE `email` = ?";
+			connection.execute( query, [ email ], ( err, data ) =>
 			{
-				query =
-					"INSERT INTO `users`(`name`, `email`, `password`, `address1`, `address2`, `phone_number`,`gender`, `age`) VALUES (?,?,?,?,?,?,?,?)";
-
-						if (validateEmail(email)) {
-							if (validatePassword(password)) {
-								if ( validateEgyptianPhoneNumber( phone_number ) )
-								{
-									
-									connection.execute(
-										query,
-										[ name, email, password, address1, address2, phone_number, gender, age ],
-										( err, data ) =>
-										{
-											if ( err ) res.send( `ERROR: ${ err }` );
-											else res.send( "user added successfully" );
-										}
-									);
-								} else
-								{
-									res.send( "invalid phone number" )
-								}
+				if ( err ) res.send( `ERROR: ${ err }` );
+				else if ( data.length != 0 ) res.send( "ERROR: this email exists" );
+				else
+				{
+					query =
+						"INSERT INTO `users`(`name`, `email`, `password`, `address1`, `address2`, `phone_number`,`gender`, `age`) VALUES (?,?,?,?,?,?,?,?)";
+					connection.execute( query,
+						[ name, email, password, address1, address2 ? address2 : null, phone_number, gender, age ],
+						( err, data ) =>
+						{
+							if (err) {
+								res.send(err)
 							} else
 							{
-								res.send("invalid password structure")
+								res.send("sign up successfully")
 							}
 						}
-						else{
-							res.send("invalid email structure")
-						}
-					
-				
-			}
-		} );
+					)
+
+
+				}
+			} );
+		} else{
+			res.status(400).send(errors.array()[0]['msg'])
+		}
 	} else
 	{
 		res.status( 401 ).send( "authentication refused" );
