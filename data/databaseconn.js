@@ -18,7 +18,6 @@ const connection = sql.createConnection({
 
 module.exports = {
 	sql,
-	port,
 	Allowed_ip,
 	Admins_ip,
 	Allowed_ips,
