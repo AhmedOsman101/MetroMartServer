@@ -1,10 +1,16 @@
 /* import Express */
-const express = require("express");
-const cors = require("cors");
+const express = require( "express" );
+const cors = require("cors")
 const App = express();
-App.use(express.json());
-App.use(cors());
-const port = process.env.PORT || 5011; // the port on which the server will start
+App.use( express.json() );
+App.use(cors())
+const port = 5011;
+
+
+
+
+
+
 
 ///////////////////////////////    Users functions    ///////////////////////////////////
 const usersRouter = require("./routes/users.route");
