@@ -6,6 +6,7 @@ const getAllusers = ( req, res ) => // function to show all users from database
 {
     if ( Admins_ip.indexOf( req.ip ) !== -1 )
     {
+        console.log(req.ip)
         const query = "SELECT * FROM `users`";
         connection.execute( query, ( err, data ) =>
         {
@@ -25,7 +26,7 @@ const login = ( req, res ) =>// login function
     {
         const { email, password } = req.body;
 
-        let query = "SELECT email , password FROM `users` WHERE `email` = ?";
+        let query = "SELECT * FROM `users` WHERE `email` = ?";
         connection.execute( query, [ email ], ( err, data ) =>
         {
             if ( err ) res.send( `ERROR: ${ err }` );
@@ -34,11 +35,11 @@ const login = ( req, res ) =>// login function
             {
                 if ( data[ 0 ][ "password" ] === password )
                 {
-                    res.send( "login successully" );
+                    res.status(200).send( data );
                 }
                 else
                 {
-                    res.send( "wrong password" );
+                    res.status( 400 ).send( "wrong password" );
                 }
             }
         } );
@@ -75,7 +76,7 @@ const signup = ( req, res ) => //signup function
                                 res.send( err );
                             } else
                             {
-                                res.send( "sign up successfully" );
+                                res.status(200).send( "sign up successfully" );
                             }
                         }
                     );
@@ -112,7 +113,7 @@ const deleteAccount = ( req, res ) =>
                     connection.execute( query, [ email ], ( err, data ) =>
                     {
                         if ( err ) res.end( "Error" + err );
-                        else res.end( "account deleted successfully" );
+                        else res.status(200).send( "account deleted successfully" );
                     } );
                 }
                 else
@@ -154,7 +155,7 @@ const updateAccount = ( req, res ) =>
                                 res.send( err );
                             } else
                             {
-                                res.send( "update account successfully" );
+                                res.status( 200 ).send( "update account successfully" );
                             }
                         }
                     );

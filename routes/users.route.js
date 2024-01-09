@@ -1,14 +1,14 @@
 const usersController = require( "../controllers/users.controller" );
 const { body, validationResult } = require( 'express-validator' );
 const express = require( 'express' )
-const router = express.Router();
+const userrouter = express.Router();
 
 
 
-router.get( "/",usersController.getAllusers );
-router.post( "/user/login", usersController.login );
+userrouter.get( "/",usersController.getAllusers );
+userrouter.post( "/user/login", usersController.login );
 
-router.post( "/user/signup",
+userrouter.post( "/user/signup",
     body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
     body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
     body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
@@ -33,11 +33,11 @@ router.post( "/user/signup",
 
 
 // Handle DELETE requests to remove users
-router.delete( "/user/deleteaccount", usersController.deleteAccount );
+userrouter.delete( "/user/deleteaccount", usersController.deleteAccount );
 
 
 // Handle PUT requests to update users
-router.put( "/user/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+userrouter.put( "/user/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
     body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
     body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
     body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
@@ -60,10 +60,10 @@ router.put( "/user/updateaccount", body( "name" ).notEmpty().withMessage( "name 
     } ), usersController.updateAccount );
 
 // handle any other requests
-router.use( ( req, res ) =>
+userrouter.use( ( req, res ) =>
 {
-    res.end( "ERROR-404 Page Was Not Found" ); // Send back an error message as a response
+    res.status(404).send( "ERROR-404 Page Was Not Found" ); // Send back an error message as a response
 } );
 
 
-module.exports = router
+module.exports = userrouter;
