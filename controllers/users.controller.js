@@ -17,21 +17,7 @@ const getAllusers = ( req, res ) => // function to show all users from database
     {
         res.status( 401 ).send( "authentication refused" );
     }
-
-const getAllusers = (
-	req,
-	res // function to show all users from database
-) => {
-	if (Admins_ip.indexOf(req.ip) !== -1) {
-		const query = "SELECT * FROM `users`";
-		connection.execute(query, (err, data) => {
-			if (err) res.send(`ERROR: ${err}`);
-			else res.json(data);
-		});
-	} else {
-		res.status(401).send("authentication refused");
-	}
-};
+}
 
 const login = (
 	req,
