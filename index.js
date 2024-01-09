@@ -1,8 +1,11 @@
 /* import Express */
 const express = require("express");
 const App = express();
-App.use(express.json());
+const cors = require("cors");
 const port = 5011;
+
+App.use(express.json());
+App.use(cors());
 
 ///////////////////////////////    Users functions    ///////////////////////////////////
 const usersRouter = require("./routes/users.route");
