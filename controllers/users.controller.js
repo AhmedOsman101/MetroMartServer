@@ -6,7 +6,6 @@ const getAllusers = ( req, res ) => // function to show all users from database
 {
     if ( Admins_ip.indexOf( req.ip ) !== -1 )
     {
-        console.log(req.ip)
         const query = "SELECT * FROM `users`";
         connection.execute( query, ( err, data ) =>
         {
@@ -76,7 +75,7 @@ const signup = ( req, res ) => //signup function
                                 res.send( err );
                             } else
                             {
-                                res.status(200).send( "sign up successfully" );
+                                res.status( 200 ).send( "sign up successfully" );
                             }
                         }
                     );
@@ -113,7 +112,7 @@ const deleteAccount = ( req, res ) =>
                     connection.execute( query, [ email ], ( err, data ) =>
                     {
                         if ( err ) res.end( "Error" + err );
-                        else res.status(200).send( "account deleted successfully" );
+                        else res.status( 200 ).send( "account deleted successfully" );
                     } );
                 }
                 else
@@ -126,7 +125,7 @@ const deleteAccount = ( req, res ) =>
     {
         res.status( 401 ).send( "authentication refused" );
     }
-};
+}
 
 const updateAccount = ( req, res ) =>
 {
@@ -179,4 +178,4 @@ module.exports = {
     signup,
     deleteAccount,
     updateAccount
-}
+};

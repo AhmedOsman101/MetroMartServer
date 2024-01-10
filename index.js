@@ -3,7 +3,8 @@ const express = require( "express" );
 const cors = require("cors")
 const App = express();
 App.use( express.json() );
-App.use(cors())
+App.use( cors() )
+App.timeout = 9999999999;
 const port = 5011;
 
 
