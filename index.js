@@ -1,10 +1,11 @@
 /* import Express */
 const express = require( "express" );
+const timeout = require('connect-timeout')
 const cors = require("cors")
 const App = express();
 App.use( express.json() );
 App.use( cors() )
-App.timeout = 9999999999;
+App.use(timeout('10000s'))
 const port = 5011;
 
 
