@@ -6,9 +6,9 @@ const userrouter = express.Router();
 
 
 userrouter.get( "/",usersController.getAllusers );
-userrouter.post( "/user/login", usersController.login );
+userrouter.post( "/login", usersController.login );
 
-userrouter.post( "/user/signup",
+userrouter.post( "/signup",
     body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
     body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
     body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
@@ -33,11 +33,11 @@ userrouter.post( "/user/signup",
 
 
 // Handle DELETE requests to remove users
-userrouter.delete( "/user/deleteaccount", usersController.deleteAccount );
+userrouter.delete( "/deleteaccount", usersController.deleteAccount );
 
 
 // Handle PUT requests to update users
-userrouter.put( "/user/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+userrouter.put( "/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
     body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
     body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
     body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
