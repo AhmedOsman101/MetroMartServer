@@ -1,20 +1,30 @@
-/* imports */
-const express = require("express");
-const cors = require("cors");
-/* constants */
+/* import Express */
+const express = require( "express" );
+const timeout = require( 'connect-timeout' )
+require( "dotenv" ).config();
+const cors = require("cors")
 const App = express();
-const port = 5011;
-/* Middleware */
-App.use(express.json());
-App.use(cors());
+App.use( express.json() );
+App.use( cors() )
+App.use( timeout( '10000s' ) )
+const port = process.env.PORT;
+const { connection, sequelize } = require( "./data/dbconn" );
+
+
+
+
+
+
 
 ///////////////////////////////    Users functions    ///////////////////////////////////
-const usersRouter = require("./routes/users.route");
-App.use("/", usersRouter);
+const usersRouter = require( "./routes/users.route" )
+App.use("/user",usersRouter)
 
 //////////////////////////////   USERS end   /////////////////////////////////////////////
 
 // Start the server and have it listen on the specified port
-App.listen(port, () => {
-	console.log(`Server is running on http://localhost:${port}`);
-});
+App.listen( port, async() =>
+{
+	console.log( `Server is running on http://localhost:${ port }` );
+	await connection()
+} );

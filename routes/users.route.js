@@ -6,65 +6,62 @@ const userRouter = express.Router();
 userRouter.get("/", usersController.getAllusers);
 userRouter.post("/user/login", usersController.login);
 
-userRouter.post(
-	"/user/signup",
-	body("name").notEmpty().withMessage("name cannot be empty"),
-	body("email").notEmpty().withMessage("email is required").isEmail(),
-	body("password").notEmpty().isStrongPassword().withMessage("weak password"),
-	body("address1")
-		.notEmpty()
-		.withMessage("address cannot be empty")
-		.isString(),
-	body("phone_number")
-		.notEmpty()
-		.isMobilePhone()
-		.withMessage("invalid phone_number"),
-	body("gender").custom((value) => {
-		if (value !== "male" && value !== "female") {
-			throw new Error("gender must be either 'male' or 'female'");
-		}
-		return true;
-	}),
-	body("age").custom((value) => {
-		if (value < 18) {
-			throw new Error("age must be at least 18");
-		}
-		return true;
-	}),
-	usersController.signup
-);
+
+
+
+userrouter.get( "/",usersController.getAllusers );
+userrouter.post( "/login", usersController.login );
+
+userrouter.post( "/signup",
+    body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+    body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
+    body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
+    body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
+    body( "phone_number" ).notEmpty().isMobilePhone().withMessage( "invalid phone_number" ),
+    body( "gender" ).custom( ( value ) =>
+    {
+        if ( value !== "male" && value !== "female" )
+        {
+            throw new Error( "gender must be either 'male' or 'female'" );
+        }
+        return true;
+    } ),
+    body( "age" ).custom( ( value ) =>
+    {
+        if ( value < 18 )
+        {
+            throw new Error( "age must be at least 18" );
+        }
+        return true;
+    } ), usersController.signup );
+
 
 // Handle DELETE requests to remove users
-userRouter.delete("/user/deleteAccount", usersController.deleteAccount);
+userrouter.delete( "/deleteaccount", usersController.deleteAccount );
+
 
 // Handle PUT requests to update users
-userRouter.put(
-	"/user/updateAccount",
-	body("name").notEmpty().withMessage("name cannot be empty"),
-	body("email").notEmpty().withMessage("email is required").isEmail(),
-	body("password").notEmpty().isStrongPassword().withMessage("weak password"),
-	body("address1")
-		.notEmpty()
-		.withMessage("address cannot be empty")
-		.isString(),
-	body("phone_number")
-		.notEmpty()
-		.isMobilePhone()
-		.withMessage("invalid phone number"),
-	body("gender").custom((value) => {
-		if (value !== "male" && value !== "female") {
-			throw new Error("gender must be either 'male' or 'female'");
-		}
-		return true;
-	}),
-	body("age").custom((value) => {
-		if (value < 18) {
-			throw new Error("age must be at least 18");
-		}
-		return true;
-	}),
-	usersController.updateAccount
-);
+userrouter.put( "/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+    body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
+    body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
+    body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
+    body( "phone_number" ).notEmpty().isMobilePhone().withMessage( "invalid phone_number" ),
+    body( "gender" ).custom( ( value ) =>
+    {
+        if ( value !== "male" && value !== "female" )
+        {
+            throw new Error( "gender must be either 'male' or 'female'" );
+        }
+        return true;
+    } ),
+    body( "age" ).custom( ( value ) =>
+    {
+        if ( value < 18 )
+        {
+            throw new Error( "age must be at least 18" );
+        }
+        return true;
+    } ), usersController.updateAccount );
 
 // handle any other requests
 userRouter.use((req, res) => {
