@@ -9,11 +9,14 @@ const Allowed_ip = process.env.ALLOWED_IP;
 const Admins_ip = process.env.ADMINS_IP;
 const Allowed_ips = JSON.parse(Allowed_ip);
 
-const connection = sql.createConnection({
+const connection = sql.createPool({
 	host: DB_HOST,
 	user: DB_USER,
 	password: DB_PASSWORD,
 	database: DB_NAME,
+	waitForConnections: true,
+	connectionLimit: 10,
+	queueLimit: 0,
 });
 
 module.exports = {

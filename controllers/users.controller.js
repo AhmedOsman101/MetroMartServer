@@ -12,7 +12,7 @@ const getAllusers = (req, res) => {
 	if (Admins_ip.indexOf(req.ip) !== -1) {
 		console.log(req.ip);
 		const query = "SELECT * FROM `users`";
-		connection.execute(query, (err, data) => {
+		connection.query(query, (err, data) => {
 			if (err) res.send(`ERROR: ${err}`);
 			else res.json(data);
 		});
@@ -27,7 +27,7 @@ const login = (req, res) => {
 		const { email, password } = req.body;
 
 		let query = "SELECT * FROM `users` WHERE `email` = ?";
-		connection.execute(query, [email], (err, data) => {
+		connection.query(query, [email], (err, data) => {
 			if (err) res.send(`ERROR: ${err}`);
 			else if (data.length == 0)
 				res.send("ERROR: this mail doesn't exist");
@@ -61,14 +61,14 @@ const signup = (req, res) => {
 			} = req.body;
 
 			let query = "SELECT email FROM `users` WHERE `email` = ?";
-			connection.execute(query, [email], (err, data) => {
+			connection.query(query, [email], (err, data) => {
 				if (err) res.send(`ERROR: ${err}`);
 				else if (data.length != 0)
 					res.send("ERROR: this email is exists");
 				else {
 					query =
 						"INSERT INTO `users`(`name`, `email`, `password`, `address1`, `address2`, `phone_number`,`gender`, `age`) VALUES (?,?,?,?,?,?,?,?)";
-					connection.execute(
+					connection.query(
 						query,
 						[
 							name,
@@ -103,14 +103,14 @@ const deleteAccount = (req, res) => {
 		const { email, password } = req.body;
 
 		let query = "SELECT email , password FROM `users` WHERE `email` = ?";
-		connection.execute(query, [email], (err, data) => {
+		connection.query(query, [email], (err, data) => {
 			if (err) res.send(`ERROR: ${err}`);
 			else if (data.length == 0)
 				res.send("ERROR: this mail doesn't exist");
 			else {
 				if (data[0]["password"] === password) {
 					query = "DELETE FROM `users` WHERE email = ?";
-					connection.execute(query, [email], (err, data) => {
+					connection.query(query, [email], (err, data) => {
 						if (err) res.end("Error" + err);
 						else
 							res.status(200).send(
@@ -143,14 +143,14 @@ const updateAccount = (req, res) => {
 			} = req.body;
 
 			let query = "SELECT email FROM `users` WHERE `email` = ?";
-			connection.execute(query, [email], (err, data) => {
+			connection.query(query, [email], (err, data) => {
 				if (err) res.send(`ERROR: ${err}`);
 				else if (data.length == 0)
 					res.send("ERROR: this email is not exists");
 				else {
 					query =
 						"UPDATE `users` SET `name`=?,`email`=?,`password`=?,`address1`=?,`address2`=?,`phone_number`=?,`gender`=?,`age`= ? WHERE email = ?";
-					connection.execute(
+					connection.query(
 						query,
 						[
 							name,
