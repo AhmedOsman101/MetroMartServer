@@ -115,7 +115,8 @@ const deleteAccount = async( req, res ) => // delete function
 
             if ( user.length > 0 )
             {
-                if ( user[ 0 ].password == password )
+                const matchPassword = await bcrypt.compare( password, user[ 0 ].password );
+                if ( matchPassword )
                 {
                     try {
                         await User.destroy( {
@@ -164,7 +165,8 @@ const updateAccount = async( req, res ) =>
                 } );
                 if ( user.length > 0 )
                 {
-                    if ( user[ 0 ].password == password )
+                    const matchPassword = await bcrypt.compare( password, user[ 0 ].password );
+                    if ( matchPassword )
                     {
                         try {
                             await User.update( {
