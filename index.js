@@ -1,9 +1,10 @@
-/* import Express */
+/* imports */
 const express = require("express");
-const App = express();
 const cors = require("cors");
+/* constants */
+const App = express();
 const port = 5011;
-
+/* Middleware */
 App.use(express.json());
 App.use(cors());
 
