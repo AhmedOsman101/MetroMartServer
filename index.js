@@ -17,6 +17,7 @@ const { connection, sequelize } = require( "./data/dbconn" );
 
 
 ///////////////////////////////    Users functions    ///////////////////////////////////
+
 const usersRouter = require( "./routes/users.route" )
 App.use("/user",usersRouter)
 

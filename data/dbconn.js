@@ -15,7 +15,6 @@ const sequelize = new Sequelize(
     DB_PASSWORD, {
     dialect: 'mysql',
     host: DB_HOST,
-        
 }
 
 );
