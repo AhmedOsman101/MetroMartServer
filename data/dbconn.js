@@ -23,7 +23,7 @@ const connection = async () =>
 {
     try {
         await sequelize.authenticate();
-        console.log("successfuly connected to database")
+        console.log("successfully connected to database")
     } catch (error) {
         console.log( error );
     }
