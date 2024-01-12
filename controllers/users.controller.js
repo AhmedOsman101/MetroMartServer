@@ -31,14 +31,16 @@ const login = async ( req, res ) =>// login function
     {
         const { email, password } = req.body;
         try {
-            user = await User.findAll( {
+            const user = await User.findAll( {
                 where: {
                     email: email
                 }
             } );
             if ( user.length > 0 )
             {
-                if ( user[ 0 ].password == password )
+                console.log( user[ 0 ].password, "----", password )
+                const matchPassword = await bcrypt.compare(password,user[0].password);
+                if ( matchPassword )
                 {
                     res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: user[ 0 ] } );
                 } else
