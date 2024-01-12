@@ -5,6 +5,8 @@ const productrouter = express.Router();
 
 
 productrouter.get( "/", productsController.getAllProducts );
+productrouter.get( "/:id", productsController.getSingleProduct );
+productrouter.get( "/:name", productsController.searchForProducts );
 
 
 
