@@ -1,55 +1,65 @@
 /*database connection*/
-const { port, Admins_ip, Allowed_ips, connection } = require( "../data/databaseconn" );
+const { Admins_ip, Allowed_ips, connection, sequelize } = require( "../data/dbconn" );
 const { validationResult } = require( 'express-validator' );
-const httpStatusText = require("../utils/httpStatustext")
+const httpStatusText = require( "../utils/httpStatustext" );
+const User = require( '../models/users' );
 
-const getAllusers = ( req, res ) => // function to show all users from database
+const getAllusers = async ( req, res ) => // function to show all users from database
 {
     if ( Admins_ip.indexOf( req.ip ) !== -1 )
     {
-        const query = "SELECT * FROM `users`";
-        connection.execute( query, ( err, users ) =>
+        try
         {
-            if ( err ) res.send( { status: httpStatusText.FAIL, data: { "err": err.message } } );
-            else res.json( { status: httpStatusText.SUCCESS, data: { users } } );
-        } );
+            const users = await User.findAll();
+            res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: users } );
+        } catch ( error )
+        {
+            res.status( 400 ).send( error );
+        }
+
     } else
     {
-        res.status( 401 ).send( { status: httpStatusText.FAIL, data: { "data":"authentication refused" } } );
+        res.status( 401 ).send( { status: httpStatusText.FAIL, data: { "data": "authentication refused" } } );
     }
 
 };
 
-const login = ( req, res ) =>// login function
+const login = async ( req, res ) =>// login function
 {
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
     {
         const { email, password } = req.body;
-
-        let query = "SELECT * FROM `users` WHERE `email` = ?";
-        connection.execute( query, [ email ], ( err, data ) =>
-        {
-            if ( err ) res.send( `ERROR: ${ err }` );
-            else if ( data.length == 0 ) res.send( "ERROR: this mail doesn't exist" );
-            else
+        try {
+            user = await User.findAll( {
+                where: {
+                    email: email
+                }
+            } );
+            if ( user.length > 0 )
             {
-                if ( data[ 0 ][ "password" ] === password )
+                if ( user[ 0 ].password == password )
                 {
-                    res.status(200).send( data );
-                }
-                else
+                    res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: user[ 0 ] } );
+                } else
                 {
-                    res.status( 400 ).send( "wrong password" );
+                    res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: 'wrong password' } );
                 }
+            } else
+            {
+                res.status( 404 ).send( { status: httpStatusText.FAIL, data: null , msg : "email doesn't exists" }   );
             }
-        } );
+        } catch (error) {
+            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message })
+        }
+        
     } else
     {
-        res.status( 401 ).send( "authentication refused" );
+        res.status( 401 ).send( { status: httpStatusText.FAIL, data: null, msg: "authentication refused" } ); 
     }
 };
 
-const signup = ( req, res ) => //signup function
+
+const signup = async ( req, res ) => //signup function
 {
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
     {
@@ -57,119 +67,141 @@ const signup = ( req, res ) => //signup function
         if ( errors.isEmpty() )
         {
             const { name, email, password, address1, address2, phone_number, gender, age } = req.body;
-
-            let query = "SELECT email FROM `users` WHERE `email` = ?";
-            connection.execute( query, [ email ], ( err, data ) =>
-            {
-                if ( err ) res.send( `ERROR: ${ err }` );
-                else if ( data.length != 0 ) res.send( "ERROR: this email is exists" );
-                else
-                {
-                    query =
-                        "INSERT INTO `users`(`name`, `email`, `password`, `address1`, `address2`, `phone_number`,`gender`, `age`) VALUES (?,?,?,?,?,?,?,?)";
-                    connection.execute( query,
-                        [ name, email, password, address1, address2 ? address2 : null, phone_number, gender, age ],
-                        ( err, user ) =>
-                        {
-                            if ( err )
-                            {
-                                res.send( err );
-                            } else
-                            {
-                                res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: { user } } );
-                            }
-                        }
-                    );
-
-
-                }
+            const newUser = User.build( {
+                'name': name,
+                'email': email,
+                'password': password,
+                'address1': address1,
+                'address2': address2 ? address2 : null,
+                'phone_number': phone_number,
+                'gender': gender,
+                'age': age
             } );
+            
+            try
+            {
+                await newUser.save();
+                res.status( 201 ).send( { status: httpStatusText.SUCCESS, data: newUser } );
+            } catch ( error )
+            {
+                res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );
+            }
         } else
         {
-            res.status( 400 ).send( errors.array()[ 0 ][ 'msg' ] );
+            res.status( 400 ).send( { status: httpStatusText.Fail, data: null, msg : errors.array()[ 0 ][ 'msg' ] } );
         }
     } else
     {
-        res.status( 401 ).send( "authentication refused" );
+        res.status( 401 ).send( res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: "authentication refused" } ) );
     }
 };
 
-const deleteAccount = ( req, res ) => // delete function
+
+const deleteAccount = async( req, res ) => // delete function
 {
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
     {
         const { email, password } = req.body;
-
-        let query = "SELECT email , password FROM `users` WHERE `email` = ?";
-        connection.execute( query, [ email ], ( err, data ) =>
+        try
         {
-            if ( err ) res.send( `ERROR: ${ err }` );
-            else if ( data.length == 0 ) res.send( "ERROR: this mail doesn't exist" );
-            else
+            user = await User.findAll( {
+                where: {
+                    email: email
+                }
+            } );
+
+            if ( user.length > 0 )
             {
-                if ( data[ 0 ][ "password" ] === password )
+                if ( user[ 0 ].password == password )
                 {
-                    query = "DELETE FROM `users` WHERE email = ?";
-                    connection.execute( query, [ email ], ( err, data ) =>
-                    {
-                        if ( err ) res.end( "Error" + err );
-                        else res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null } );
-                    } );
-                }
-                else
+                    try {
+                        await User.destroy( {
+                            where: {
+                                email: email
+                            }
+                        } );
+                        res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null, msg: "user deleted" } )
+                    }catch (error) {
+                        res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } )
+                    }
+                    res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: user[ 0 ] } );
+                } else
                 {
-                    res.send( "wrong password" );
+                    res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: 'wrong password' } );
                 }
+            } else
+            {
+                res.status( 404 ).send( { status: httpStatusText.FAIL, data: null, msg: "email doesn't exists" } );
             }
-        } );
+        } catch ( error )
+        {
+            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error } );
+        }
     } else
     {
         res.status( 401 ).send( "authentication refused" );
     }
 }
 
-const updateAccount = ( req, res ) =>
+
+const updateAccount = async( req, res ) =>
 {
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
     {
+        const { name, email, password,new_password, address1, address2, phone_number,gender,age } = req.body
         const errors = validationResult( req );
         if ( errors.isEmpty() )
         {
-            const { name, email, password, address1, address2, phone_number, gender, age } = req.body;
-
-            let query = "SELECT email FROM `users` WHERE `email` = ?";
-            connection.execute( query, [ email ], ( err, data ) =>
+            try
             {
-                if ( err ) res.send( `ERROR: ${ err }` );
-                else if ( data.length == 0 ) res.send( "ERROR: this email is not exists" );
-                else
+                user = await User.findAll( {
+                    where: {
+                        email: email
+                    }
+                } );
+                if ( user.length > 0 )
                 {
-                    query =
-                        "UPDATE `users` SET `name`=?,`email`=?,`password`=?,`address1`=?,`address2`=?,`phone_number`=?,`gender`=?,`age`= ? WHERE email = ?";
-                    connection.execute( query,
-                        [ name, email, password, address1, address2 ? address2 : null, phone_number, gender, age, email ],
-                        ( err, info ) =>
-                        {
-                            if ( err )
-                            {
-                                res.send( err );
-                            } else
-                            {
-                                res.status( 200 ).send( { status: httpStatusText.SUCCESS , data : {info}});
-                            }
+                    if ( user[ 0 ].password == password )
+                    {
+                        try {
+                            await User.update( {
+                                "name": name,
+                                "email": email,
+                                "password": new_password,
+                                "address1": address1,
+                                "address2": address2,
+                                "phone_number": phone_number,
+                                "gender": gender,
+                                "age": age
+                            }, {
+                                where: {
+                                    'email': email
+                                }
+                            } );
+                            res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null , msg : "user has been updated successfully" } )
+                        } catch (error) {
+                            res.status(400).send(error)
                         }
-                    );
-
-
+                        
+                    } else
+                    {
+                        res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: 'wrong password' } );
+                    }
+                } else
+                {
+                    res.status( 404 ).send( { status: httpStatusText.FAIL, data: null, msg: "email doesn't exists" } );
                 }
-            } );
+            } catch ( error )
+            {
+                res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );
+            }
         } else
         {
-            res.status( 400 ).send( errors.array()[ 0 ][ 'msg' ] );
+            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg:errors.array()[ 0 ][ 'msg' ] });
         }
     } else
     {
-        res.status( 401 ).send( "authentication refused" );
+        res.status( 401 ).send( { status: httpStatusText.FAIL, data: null, msg:"authentication refused"  });
     }
 };
 
