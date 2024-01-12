@@ -7,10 +7,11 @@ const App = express();
 App.use(express.json());
 App.use(cors());
 App.use(timeout("10000s"));
-const port = process.env.PORT || 5011;
+const port = process.env.PORT;
 const { connection, sequelize } = require("./data/dbconn");
 
 ///////////////////////////////    Users functions    ///////////////////////////////////
+
 const usersRouter = require("./routes/users.route");
 App.use("/user", usersRouter);
 
