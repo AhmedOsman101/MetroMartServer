@@ -3,6 +3,7 @@ const { Admins_ip, Allowed_ips, connection, sequelize } = require( "../data/dbco
 const { validationResult } = require( 'express-validator' );
 const httpStatusText = require( "../utils/httpStatustext" );
 const User = require( '../models/users' );
+const bcrypt = require( 'bcryptjs' );
 
 const getAllusers = async ( req, res ) => // function to show all users from database
 {
@@ -14,7 +15,7 @@ const getAllusers = async ( req, res ) => // function to show all users from dat
             res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: users } );
         } catch ( error )
         {
-            res.status( 400 ).send( error );
+            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null , msg :error  } );
         }
 
     } else
@@ -70,7 +71,7 @@ const signup = async ( req, res ) => //signup function
             const newUser = User.build( {
                 'name': name,
                 'email': email,
-                'password': password,
+                'password': await bcrypt.hash(password,10),
                 'address1': address1,
                 'address2': address2 ? address2 : null,
                 'phone_number': phone_number,
