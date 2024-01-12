@@ -121,7 +121,7 @@ const signup = async (req, res) => {
 			}
 		} else {
 			res.status(400).send({
-				status: httpStatusText.Fail,
+				status: httpStatusText.FAIL,
 				data: null,
 				msg: errors.array()[0]["msg"],
 			});
