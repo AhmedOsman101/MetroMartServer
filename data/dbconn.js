@@ -13,24 +13,13 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
 	host: DB_HOST,
 });
 
-const sequelize = new Sequelize(
-    DB_NAME,
-    DB_USER,
-    DB_PASSWORD, {
-    dialect: 'mysql',
-    host: DB_HOST,
-}
-
-);
-
-const connection = async () =>
-{
-    try {
-        await sequelize.authenticate();
-        console.log("successfully connected to database")
-    } catch (error) {
-        console.log( error );
-    }
+const connection = async () => {
+	try {
+		await sequelize.authenticate();
+		console.log("successfully connected to database");
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 module.exports = { sequelize, connection, Admins_ip, Allowed_ips };
