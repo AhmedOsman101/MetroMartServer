@@ -3,9 +3,6 @@ const { body, validationResult } = require("express-validator");
 const express = require("express");
 const userRouter = express.Router();
 
-router.get("/", usersController.getAllusers);
-router.post("/user/login", usersController.login);
-
 userRouter.get("/", usersController.getAllusers);
 userRouter.post("/user/login", usersController.login);
 
