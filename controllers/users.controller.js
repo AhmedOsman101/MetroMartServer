@@ -7,10 +7,8 @@ const {
 } = require("../data/databaseconn");
 const { validationResult } = require("express-validator");
 
-const getAllusers = (
-	req,
-	res // function to show all users from database
-) => {
+// function to show all users from database
+const getAllusers = (req, res) => {
 	if (Admins_ip.indexOf(req.ip) !== -1) {
 		console.log(req.ip);
 		const query = "SELECT * FROM `users`";
@@ -23,10 +21,8 @@ const getAllusers = (
 	}
 };
 
-const login = (
-	req,
-	res // login function
-) => {
+// login function
+const login = (req, res) => {
 	if (Allowed_ips.indexOf(req.ip) !== -1) {
 		const { email, password } = req.body;
 
@@ -48,10 +44,8 @@ const login = (
 	}
 };
 
-const signup = (
-	req,
-	res //signup function
-) => {
+//signup function
+const signup = (req, res) => {
 	if (Allowed_ips.indexOf(req.ip) !== -1) {
 		const errors = validationResult(req);
 		if (errors.isEmpty()) {
