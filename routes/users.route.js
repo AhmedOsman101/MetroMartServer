@@ -1,15 +1,15 @@
 const usersController = require("../controllers/users.controller");
 const { body, validationResult } = require("express-validator");
 const express = require("express");
-const userrouter = express.Router();
+const userRouter = express.Router();
 
 router.get("/", usersController.getAllusers);
 router.post("/user/login", usersController.login);
 
-userrouter.get("/", usersController.getAllusers);
-userrouter.post("/user/login", usersController.login);
+userRouter.get("/", usersController.getAllusers);
+userRouter.post("/user/login", usersController.login);
 
-userrouter.post(
+userRouter.post(
 	"/user/signup",
 	body("name").notEmpty().withMessage("name cannot be empty"),
 	body("email").notEmpty().withMessage("email is required").isEmail(),
@@ -38,11 +38,11 @@ userrouter.post(
 );
 
 // Handle DELETE requests to remove users
-userrouter.delete("/user/deleteaccount", usersController.deleteAccount);
+userRouter.delete("/user/deleteAccount", usersController.deleteAccount);
 
 // Handle PUT requests to update users
-userrouter.put(
-	"/user/updateaccount",
+userRouter.put(
+	"/user/updateAccount",
 	body("name").notEmpty().withMessage("name cannot be empty"),
 	body("email").notEmpty().withMessage("email is required").isEmail(),
 	body("password").notEmpty().isStrongPassword().withMessage("weak password"),
@@ -53,7 +53,7 @@ userrouter.put(
 	body("phone_number")
 		.notEmpty()
 		.isMobilePhone()
-		.withMessage("invalid phone_number"),
+		.withMessage("invalid phone number"),
 	body("gender").custom((value) => {
 		if (value !== "male" && value !== "female") {
 			throw new Error("gender must be either 'male' or 'female'");
@@ -70,8 +70,8 @@ userrouter.put(
 );
 
 // handle any other requests
-userrouter.use((req, res) => {
-	res.status(404).send("ERROR-404 Page Was Not Found"); // Send back an error message as a response
+userRouter.use((req, res) => {
+	res.status(404).send("ERROR-404: Page Was Not Found"); // Send back an error message as a response
 });
 
-module.exports = userrouter;
+module.exports = userRouter;
