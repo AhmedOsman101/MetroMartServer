@@ -46,7 +46,9 @@ const login = async ( req, res ) =>// login function
                 const matchPassword = await bcrypt.compare(password,user[0].password);
                 if ( matchPassword )
                 {
-                    res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: user[ 0 ] } );
+                    const token = await jwt.sign( { email: user[0].email, id: user[0]._id }, jwt_secret_key, { expiresIn: '10m' } );
+                    user[0].token = token
+                    res.status( 200 ).send( { status: httpStatusText.SUCCESS, token: user[ 0 ].token } );
                 } else
                 {
                     res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: 'wrong password' } );
@@ -91,7 +93,18 @@ const signup = async ( req, res ) => //signup function
                 const token = await jwt.sign( { email: newUser.email, id: newUser._id }, jwt_secret_key, { expiresIn: '10m' } );
                 newUser.token = token
                 await newUser.save();
-                res.status( 201 ).send( { status: httpStatusText.SUCCESS, data: newUser } );
+                res.status( 201 ).send( {
+                    status: httpStatusText.SUCCESS, data: {
+                        user_name: newUser.name,
+                        user_email: newUser.email,
+                        address1: address1,
+                        address2: address2 ? address2 : null,
+                        phone_number: phone_number,
+                        gender: gender,
+                        age: age,
+                        user_token : newUser.token
+                    }
+                } );
             } catch ( error )
             {
                 res.status( 406 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );

@@ -2,12 +2,14 @@ const usersController = require( "../controllers/users.controller" );
 const { body, validationResult } = require( 'express-validator' );
 const express = require( 'express' )
 const userrouter = express.Router();
+const verifyToken = require( "../middleware/verfiyToken" )
 
 
 
 
 
-userrouter.get( "/",usersController.getAllusers );
+
+userrouter.get( "/", verifyToken,usersController.getAllusers );
 userrouter.post( "/login", usersController.login );
 
 userrouter.post( "/signup",
@@ -35,11 +37,11 @@ userrouter.post( "/signup",
 
 
 // Handle DELETE requests to remove users
-userrouter.delete( "/deleteaccount", usersController.deleteAccount );
+userrouter.delete( "/deleteaccount", verifyToken, usersController.deleteAccount );
 
 
 // Handle PUT requests to update users
-userrouter.put( "/updateaccount", body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+userrouter.put( "/updateaccount", verifyToken, body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
     body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
     body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
     body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
