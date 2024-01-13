@@ -25,6 +25,9 @@ App.use("/user",usersRouter)
 const productrouter = require( "./routes/products.route" );
 App.use( "/products", productrouter )
 
+//////////////////////////////   Carts   /////////////////////////////////////////////
+const cartRouter = require( "./routes/carts.route")
+App.use( "/Carts", cartRouter )
 
 
 // Start the server and have it listen on the specified port
