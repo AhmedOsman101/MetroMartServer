@@ -60,13 +60,13 @@ const addProductToCart = async ( req, res ) =>
 		} );
 		if ( user.length == 0 ) { throw new Error( 'user not found' ); }
 
-		const product = await User.findAll( {
+		const product = await Products.findAll( {
 			where: {
 				id: data.product_id
 			}
 		} );
 		if ( product.length == 0 ) { throw new Error( 'product not found' ); }
-		else if ( product.quantity == 0 ) { throw new Error( 'product unavilable now' ); }
+		else if ( product[0].quantity == 0 ) { throw new Error( 'product unavilable now' ); }
 		
 		if ( data.quantity <= 0 ) { throw new Error( 'invalid quantity' ); }
 
@@ -74,7 +74,10 @@ const addProductToCart = async ( req, res ) =>
 			'product_id': data.product_id,
 			'user_id': data.user_id,
 			'quantity':data.quantity
-		})
+		} )
+		await newCart.save()
+
+		res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null , msg : "added to cart successfully"} )
 
 
 	} catch (error) {

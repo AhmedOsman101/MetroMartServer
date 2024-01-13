@@ -16,6 +16,10 @@ const { DataTypes } = require( 'sequelize' );
     user_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,
@@ -46,6 +50,6 @@ const { DataTypes } = require( 'sequelize' );
       },
     ]
   } );
-
+  
 module.exports = Carts
 
