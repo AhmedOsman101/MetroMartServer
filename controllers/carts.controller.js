@@ -35,12 +35,10 @@ const getSingleCart = async ( req, res ) =>
 		userCart.forEach(element => {
 			cartProductsArr.push(element.product_id)
 		} );
-		let productsCart = []
-		for ( i of cartProductsArr )
-		{
-			let product = await Products.findOne({where:{id : i}})
-			productsCart.push(product)
-		}
+
+		const productsCart = await Products.findAll( {
+			where: { id: cartProductsArr }
+		} );
 		res.send( { status: httpStatusText.SUCCESS, data: productsCart} )
 
 	} catch ( error )
