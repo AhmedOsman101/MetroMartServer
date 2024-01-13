@@ -4,6 +4,10 @@ const { validationResult } = require( 'express-validator' );
 const httpStatusText = require( "../utils/httpStatustext" );
 const User = require( '../models/users' );
 const bcrypt = require( 'bcryptjs' );
+const jwt = require( 'jsonwebtoken' );
+require( "dotenv" ).config();
+
+const jwt_secret_key = process.env.JWT_SECRET_KEY
 
 const getAllusers = async ( req, res ) => // function to show all users from database
 {
@@ -78,11 +82,14 @@ const signup = async ( req, res ) => //signup function
                 'address2': address2 ? address2 : null,
                 'phone_number': phone_number,
                 'gender': gender,
-                'age': age
+                'age': age,
             } );
+            
             
             try
             {
+                const token = await jwt.sign( { email: newUser.email, id: newUser._id }, jwt_secret_key, { expiresIn: '10m' } );
+                newUser.token = token
                 await newUser.save();
                 res.status( 201 ).send( { status: httpStatusText.SUCCESS, data: newUser } );
             } catch ( error )
