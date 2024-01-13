@@ -52,6 +52,9 @@ const User = sequelize.define( 'users', {
   age: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false
+  },
+  token: {
+    type: String,
   }
 }, {
   sequelize,

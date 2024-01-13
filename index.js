@@ -10,12 +10,19 @@ App.use(timeout("10000s"));
 const port = process.env.PORT;
 const { connection, sequelize } = require("./data/dbconn");
 
-///////////////////////////////    Users functions    ///////////////////////////////////
+///////////////////////////////    Users    ///////////////////////////////////
 
 const usersRouter = require("./routes/users.route");
 App.use("/user", usersRouter);
 
-//////////////////////////////   USERS end   /////////////////////////////////////////////
+//////////////////////////////   Products   /////////////////////////////////////////////
+const productrouter = require( "./routes/products.route" );
+App.use( "/products", productrouter )
+
+//////////////////////////////   Carts   /////////////////////////////////////////////
+const cartRouter = require( "./routes/carts.route")
+App.use( "/Carts", cartRouter )
+
 
 // Start the server and have it listen on the specified port
 App.listen(port, async () => {

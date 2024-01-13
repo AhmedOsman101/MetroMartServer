@@ -1,70 +1,62 @@
-const usersController = require("../controllers/users.controller");
-const { body, validationResult } = require("express-validator");
-const express = require("express");
-const userRouter = express.Router();
+const usersController = require( "../controllers/users.controller" );
+const { body, validationResult } = require( 'express-validator' );
+const express = require( 'express' )
+const userrouter = express.Router();
+const verifyToken = require( "../middleware/verfiyToken" )
 
-userRouter.get("/", usersController.getAllusers);
-userRouter.post("/login", usersController.login);
+userrouter.get( "/", verifyToken,usersController.getAllusers );
+userrouter.post( "/login", usersController.login );
 
-userRouter.post(
-	"/signup",
-	body("name").notEmpty().withMessage("name cannot be empty"),
-	body("email").notEmpty().withMessage("email is required").isEmail(),
-	body("password").notEmpty().isStrongPassword().withMessage("weak password"),
-	body("address1")
-		.notEmpty()
-		.withMessage("address cannot be empty")
-		.isString(),
-	body("phone_number")
-		.notEmpty()
-		.isMobilePhone()
-		.withMessage("invalid phone_number"),
-	body("gender").custom((value) => {
-		if (value !== "male" && value !== "female") {
-			throw new Error("gender must be either 'male' or 'female'");
-		}
-		return true;
-	}),
-	body("age").custom((value) => {
-		if (value < 18) {
-			throw new Error("age must be at least 18");
-		}
-		return true;
-	}),
-	usersController.signup
-);
+userrouter.post( "/signup",
+    body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+    body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
+    body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
+    body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
+    body( "phone_number" ).notEmpty().isMobilePhone().withMessage( "invalid phone_number" ),
+    body( "gender" ).custom( ( value ) =>
+    {
+        if ( value !== "male" && value !== "female" )
+        {
+            throw new Error( "gender must be either 'male' or 'female'" );
+        }
+        return true;
+    } ),
+    body( "age" ).custom( ( value ) =>
+    {
+        if ( value < 18 )
+        {
+            throw new Error( "age must be at least 18" );
+        }
+        return true;
+    } ), usersController.signup );
+
 
 // Handle DELETE requests to remove users
-userRouter.delete("/deleteAccount", usersController.deleteAccount);
+userrouter.delete( "/deleteaccount", verifyToken, usersController.deleteAccount );
+
 
 // Handle PUT requests to update users
-userRouter.put(
-	"/updateAccount",
-	body("name").notEmpty().withMessage("name cannot be empty"),
-	body("email").notEmpty().withMessage("email is required").isEmail(),
-	body("password").notEmpty().isStrongPassword().withMessage("weak password"),
-	body("address1")
-		.notEmpty()
-		.withMessage("address cannot be empty")
-		.isString(),
-	body("phone_number")
-		.notEmpty()
-		.isMobilePhone()
-		.withMessage("invalid phone_number"),
-	body("gender").custom((value) => {
-		if (value !== "male" && value !== "female") {
-			throw new Error("gender must be either 'male' or 'female'");
-		}
-		return true;
-	}),
-	body("age").custom((value) => {
-		if (value < 18) {
-			throw new Error("age must be at least 18");
-		}
-		return true;
-	}),
-	usersController.updateAccount
-);
+userrouter.put( "/updateaccount", verifyToken, body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+    body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
+    body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
+    body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
+    body( "phone_number" ).notEmpty().isMobilePhone().withMessage( "invalid phone_number" ),
+    body( "gender" ).custom( ( value ) =>
+    {
+        if ( value !== "male" && value !== "female" )
+        {
+            throw new Error( "gender must be either 'male' or 'female'" );
+        }
+        return true;
+    } ),
+    body( "age" ).custom( ( value ) =>
+    {
+        if ( value < 18 )
+        {
+            throw new Error( "age must be at least 18" );
+        }
+        return true;
+    } ), usersController.updateAccount );
 
 // handle any other requests
 userRouter.use((req, res) => {
