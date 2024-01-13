@@ -20,6 +20,9 @@ function initModels(sequelize) {
   orders.hasMany(products_orders, { as: "products_orders", foreignKey: "order_id"});
   products_orders.belongsTo(products, { as: "product", foreignKey: "product_id"});
   products.hasMany(products_orders, { as: "products_orders", foreignKey: "product_id"});
+  users.hasMany(orders, { foreignKey: 'user_id' }); // New association
+  orders.belongsTo(users, { foreignKey: 'user_id' }); // New association
+
 
   return {
     admins,

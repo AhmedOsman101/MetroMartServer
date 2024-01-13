@@ -59,8 +59,8 @@ userrouter.put( "/updateaccount", verifyToken, body( "name" ).notEmpty().withMes
     } ), usersController.updateAccount );
 
 // handle any other requests
-userRouter.use((req, res) => {
+userrouter.use((req, res) => {
 	res.status(404).send("ERROR-404: Page Was Not Found"); // Send back an error message as a response
 });
 
-module.exports = userRouter;
+module.exports = userrouter;

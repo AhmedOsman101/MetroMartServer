@@ -22,4 +22,21 @@ const getAllCarts = async ( req, res ) =>
 };
 
 
-module.exports = { getAllCarts };
+const getAllCarts2 = async (req, res) => {
+	try {
+		const carts = await Carts.findAll({
+			include: User,
+		});
+		res.status(200).send({ status: httpStatusText.SUCCESS, data: carts });
+	} catch (error) {
+		res.status(400).send({
+			status: httpStatusText.FAIL,
+			data: null,
+			msg: error.message,
+		});
+	}
+};
+
+
+
+module.exports = { getAllCarts, getAllCarts2 };

@@ -7,7 +7,7 @@ const cartRoute = express.Router();
 
 
 
-cartRoute.get( "/",cartsController.getAllCarts);
+cartRoute.get( "/",cartsController.getAllCarts2);
 
 
 

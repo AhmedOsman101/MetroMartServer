@@ -152,7 +152,7 @@ const signup = async (
 				res.status(406).send({
 					status: httpStatusText.FAIL,
 					data: null,
-					msg: error.errors[0].message,
+					msg: error.errors,
 				});
 			}
 		} else {
