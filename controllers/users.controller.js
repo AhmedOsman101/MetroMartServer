@@ -87,11 +87,11 @@ const signup = async ( req, res ) => //signup function
                 res.status( 201 ).send( { status: httpStatusText.SUCCESS, data: newUser } );
             } catch ( error )
             {
-                res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );
+                res.status( 406 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );
             }
         } else
         {
-            res.status( 400 ).send( { status: httpStatusText.Fail, data: null, msg : errors.array()[ 0 ][ 'msg' ] } );
+            res.status( 406 ).send( { status: httpStatusText.FAIL, data: null, msg : errors.array()[ 0 ][ 'msg' ] } );
         }
     } else
     {
