@@ -49,7 +49,41 @@ const getSingleCart = async ( req, res ) =>
 	}
 };
 
+const addProductToCart = async ( req, res ) =>
+{
+	const data = req.body // user_id  , product_id , quantity
+	try {
+		const user = await User.findAll( {
+			where: {
+				id: data.user_id
+			}
+		} );
+		if ( user.length == 0 ) { throw new Error( 'user not found' ); }
+
+		const product = await User.findAll( {
+			where: {
+				id: data.product_id
+			}
+		} );
+		if ( product.length == 0 ) { throw new Error( 'product not found' ); }
+		else if ( product.quantity == 0 ) { throw new Error( 'product unavilable now' ); }
+		
+		if ( data.quantity <= 0 ) { throw new Error( 'invalid quantity' ); }
+
+		const newCart = Carts.build( {
+			'product_id': data.product_id,
+			'user_id': data.user_id,
+			'quantity':data.quantity
+		})
+
+
+	} catch (error) {
+		res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
+	}
+}
+
 module.exports = {
 	getAllCarts,
-	getSingleCart
+	getSingleCart,
+	addProductToCart
 };

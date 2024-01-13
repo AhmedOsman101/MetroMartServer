@@ -9,6 +9,7 @@ const cartRoute = express.Router();
 
 cartRoute.get( "/",cartsController.getAllCarts);
 cartRoute.get( "/getSingleCart", cartsController.getSingleCart );
+cartRoute.post( "/addProductToCart", cartsController.addProductToCart );
 
 
 
