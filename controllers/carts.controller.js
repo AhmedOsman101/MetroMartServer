@@ -31,24 +31,17 @@ const getSingleCart = async ( req, res ) =>
 		const userCart = await Carts.findAll( {
 			where: { user_id : data.user_id }
 		} )
-		if ( userCart.length == 0 ) { throw new Error( 'User has No products in Cart' ); }
+		let finalCart = []
 
-
-		let productsCart = userCart.map( ( el ) =>
-		{
-			return ({'product_id':el.product_id , 'quantity' : el.quantity})
-		} )
-		productsCart = sumQuantities( productsCart )
-
-		let finalCart =[]
-		for(let item of productsCart)
-		{
-			let product = await Products.findAll( { where: { id: item.product_id } } )
-			finalCart.push({"product_data":product[0],"quantity":item.quantity})
+		for (let product of userCart) {
+			const productData = await Products.findOne( { where: { id: product.product_id } } )
+			finalCart.push({"product_data":productData , "quantity" : product.quantity})
 		}
+		// if ( userCart.length == 0 ) { throw new Error( 'User has No products in Cart' ); }
 		
-		res.send( finalCart );
 
+		// res.send( { status: httpStatusText.SUCCESS, data: { "product_data": productData, "quantity": userCart[ 0 ].quantity } } );
+		res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: finalCart} );
 	} catch ( error )
 	{
 		res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
@@ -76,14 +69,34 @@ const addProductToCart = async ( req, res ) =>
 		
 		if ( data.quantity <= 0 ) { throw new Error( 'invalid quantity' ); }
 
-		const newCart = Carts.build( {
-			'product_id': data.product_id,
-			'user_id': data.user_id,
-			'quantity':data.quantity
-		} )
-		await newCart.save()
+		const productIsFoundInCart = await Carts.findAll({where:{product_id:data.product_id ,user_id:data.user_id }})
 
-		res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null , msg : "added to cart successfully"} )
+		if ( productIsFoundInCart.length != 0 )
+		{
+			let updatedQuantity = productIsFoundInCart[0].quantity + data.quantity
+			await Carts.update( {
+				"quantity": updatedQuantity
+			}, {
+				where: {
+					product_id: data.product_id,
+					user_id: data.user_id
+				}
+			} );
+
+			res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null, msg: "quantity of products updated" } )
+
+		} else
+		{
+			const newCart = Carts.build( {
+				'product_id': data.product_id,
+				'user_id': data.user_id,
+				'quantity':data.quantity
+			} )
+			await newCart.save()
+			res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null , msg : "added to cart successfully"} )
+		}
+
+
 
 
 	} catch (error) {
