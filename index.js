@@ -1,14 +1,15 @@
 /* import Express */
 const express = require("express");
 const timeout = require("connect-timeout");
-require("dotenv").config();
 const cors = require("cors");
+const { connection } = require("./data/dbconn");
+require("dotenv").config();
+const port = process.env.PORT;
+
 const App = express();
 App.use(express.json());
 App.use(cors());
 App.use(timeout("10000s"));
-const port = process.env.PORT;
-const { connection, sequelize } = require("./data/dbconn");
 
 ///////////////////////////////    Users    ///////////////////////////////////
 
