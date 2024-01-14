@@ -1,0 +1,11 @@
+### to use install this vs code extension
+### REST Client
+
+### get all products
+
+GET http://localhost:5011/products/
+
+### search for products
+
+GET http://localhost:5011/products/search/sm
+

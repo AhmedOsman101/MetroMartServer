@@ -1,10 +1,6 @@
-const { validationResult } = require( 'express-validator' );
 const httpStatusText = require( "../utils/httpStatustext" );
 const Products = require( '../models/products' );
-const bcrypt = require( 'bcryptjs' );
-
-
-
+const { Sequelize } = require("sequelize");
 
 const getAllProducts = async(req,res) =>
 {
@@ -32,19 +28,32 @@ const getSingleProduct = async ( req, res ) =>
     }
 }
 
-const searchForProducts = async ( req, res ) =>
-{
-    try
-    {
-        const productName = req.params.search
-        const product = await Products.findAll( { where: { name: productName } } );
-        if ( product.length == 0) { throw new Error( "No products found with this name" ); }
-        res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: product } );
-    } catch ( error )
-    {
-        res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
-    }
-}
+/* search (case-insensitive) */
+const searchForProducts = async (req, res) => {
+	try {
+		const productName = req.params.search.toLowerCase(); // make it case insensitive
+		const product = await Products.findAll({
+			where: {
+				name: Sequelize.where(
+					Sequelize.fn("LOWER", Sequelize.col("name")),
+					"LIKE",
+					productName + "%"
+				),
+			},
+		});
+		if (product.length == 0) {
+			throw new Error("No products found with this name");
+		}
+		res.status(200).send({ status: httpStatusText.SUCCESS, data: product });
+	} catch (error) {
+		res.status(400).send({
+			status: httpStatusText.FAIL,
+			data: null,
+			msg: error.message,
+		});
+	}
+};
+
 
 
 const getProductsByCategory = async ( req, res ) =>
