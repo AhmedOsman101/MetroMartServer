@@ -73,7 +73,7 @@ const addProductToCart = async ( req, res ) =>
 			}
 		} );
 		if ( product.length == 0 ) { throw new Error( 'product not found' ); }
-		else if ( product[0].quantity == 0 ) { throw new Error( 'product unavilable now' ); }
+		else if ( product[0].quantity == 0 ) { throw new Error( 'product unavailable now' ); }
 		
 		if ( data.quantity <= 0 ) { throw new Error( 'invalid quantity' ); }
 
