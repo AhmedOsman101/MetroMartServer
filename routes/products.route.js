@@ -5,8 +5,9 @@ const productrouter = express.Router();
 
 
 productrouter.get( "/", productsController.getAllProducts );
-productrouter.get( "/:id", productsController.getSingleProduct );
+productrouter.get( "/getProductById/:id", productsController.getSingleProduct );
 productrouter.get( "/search/:search", productsController.searchForProducts );
+productrouter.get( "/getProductsByCategory/:category_id", productsController.getProductsByCategory );
 
 
 

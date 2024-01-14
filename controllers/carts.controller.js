@@ -21,6 +21,18 @@ const getAllCarts = async ( req, res ) =>
         res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
     }
 };
+const getBillingDetails = async ( req, res ) =>
+{
+	const data = req.body 
+    try
+    {
+        const carts = await Carts.findAll();
+        res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: carts } );
+    } catch ( error )
+    {
+        res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
+    }
+};
 
 
 const getSingleCart = async ( req, res ) =>
@@ -120,5 +132,6 @@ module.exports = {
 	getAllCarts,
 	getSingleCart,
 	addProductToCart,
-	removeProductFromCart
+	removeProductFromCart,
+	getBillingDetails
 };

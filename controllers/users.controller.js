@@ -34,7 +34,8 @@ const login = async ( req, res ) =>// login function
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
     {
         const { email, password } = req.body;
-        try {
+        try
+        {
             const user = await User.findAll( {
                 where: {
                     email: email
@@ -42,28 +43,40 @@ const login = async ( req, res ) =>// login function
             } );
             if ( user.length > 0 )
             {
-                console.log( user[ 0 ].password, "----", password )
-                const matchPassword = await bcrypt.compare(password,user[0].password);
+                console.log( user[ 0 ].password, "----", password );
+                const matchPassword = await bcrypt.compare( password, user[ 0 ].password );
                 if ( matchPassword )
                 {
-                    const token = await jwt.sign( { email: user[0].email, id: user[0]._id }, jwt_secret_key, { expiresIn: '1d' } );
-                    user[0].token = token
-                    res.status( 200 ).send( { status: httpStatusText.SUCCESS, token: user[ 0 ].token } );
+                    const token = await jwt.sign( { email: user[ 0 ].email, id: user[ 0 ]._id }, jwt_secret_key, { expiresIn: '1d' } );
+                    user[ 0 ].token = token;
+                    res.status( 200 ).send( {
+                        status: httpStatusText.SUCCESS,
+                        data: {
+                            name: user[ 0 ].name,
+                            email: user[ 0 ].email,
+                            address1: user[ 0 ].address1,
+                            address2: user[ 0 ].address2 ? user[ 0 ].address2 : null,
+                            phone_number: user[ 0 ].phone_number,
+                            age: user[ 0 ].age,
+                            gender: user[ 0 ].gender,
+                        }, token: user[ 0 ].token
+                    } );
                 } else
                 {
                     res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: 'wrong password' } );
                 }
             } else
             {
-                res.status( 404 ).send( { status: httpStatusText.FAIL, data: null , msg : "email doesn't exists" }   );
+                res.status( 404 ).send( { status: httpStatusText.FAIL, data: null, msg: "email doesn't exists" } );
             }
-        } catch (error) {
-            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message })
+        } catch ( error )
+        {
+            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );
         }
         
     } else
     {
-        res.status( 401 ).send( { status: httpStatusText.FAIL, data: null, msg: "authentication refused" } ); 
+        res.status( 401 ).send( { status: httpStatusText.FAIL, data: null, msg: "authentication refused" } );
     }
 };
 
