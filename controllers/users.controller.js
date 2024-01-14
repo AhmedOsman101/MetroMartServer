@@ -66,7 +66,7 @@ const login = async ( req, res ) =>// login function
                             name: user[ 0 ].name,
                             email: user[ 0 ].email,
                             address1: user[ 0 ].address1,
-                            address2: user[ 0 ].address2 ? user[ 0 ].address2 : null,
+                            address2: user[ 0 ].address2 || null,
                             phone_number: user[ 0 ].phone_number,
                             age: user[ 0 ].age,
                             gender: user[ 0 ].gender,

@@ -24,9 +24,9 @@ App.use( "/products", productrouter )
 const cartRouter = require( "./routes/carts.route")
 App.use( "/carts", cartRouter )
 
-
-// Start the server and have it listen on the specified port
-App.listen(port, async () => {
-	console.log(`Server is running on http://localhost:${port}`);
-	await connection();
+// Make the Database connection then Start the server
+connection().then(() => {
+	App.listen(port, () => {
+		console.log(`Server is running on http://localhost:${port}`);
+	});
 });

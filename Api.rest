@@ -1,6 +1,23 @@
 ### to use install this vs code extension
 ### REST Client
 
+### get all users
+GET http://localhost:5011/user
+Authorization: Bearer abcd
+
+
+
+
+### Login
+POST http://localhost:5011/user/login
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZXhhbXBsZVVzZXIiLCJpYXQiOjE3MDUyNjc5MTV9.-2lT_o_G_tJoWZcpQNk_L7j8HuwqmkvPUE761hKW-8w
+
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZXhhbXBsZVVzZXIiLCJpYXQiOjE3MDUyNjc5MTV9.-2lT_o_G_tJoWZcpQNk_L7j8HuwqmkvPUE761hKW-8w",
+}
+
+
 ### get all products
 
 GET http://localhost:5011/products/
