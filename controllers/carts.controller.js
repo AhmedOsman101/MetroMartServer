@@ -37,10 +37,7 @@ const getSingleCart = async ( req, res ) =>
 			const productData = await Products.findOne( { where: { id: product.product_id } } )
 			finalCart.push({"product_data":productData , "quantity" : product.quantity})
 		}
-		// if ( userCart.length == 0 ) { throw new Error( 'User has No products in Cart' ); }
 		
-
-		// res.send( { status: httpStatusText.SUCCESS, data: { "product_data": productData, "quantity": userCart[ 0 ].quantity } } );
 		res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: finalCart} );
 	} catch ( error )
 	{
