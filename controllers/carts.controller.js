@@ -32,7 +32,6 @@ const getSingleCart = async ( req, res ) =>
 			where: { user_id : data.user_id }
 		} )
 		let finalCart = []
-
 		for (let product of userCart) {
 			const productData = await Products.findOne( { where: { id: product.product_id } } )
 			finalCart.push({"product_data":productData , "quantity" : product.quantity})
@@ -101,8 +100,25 @@ const addProductToCart = async ( req, res ) =>
 	}
 }
 
+const removeProductFromCart =  async ( req, res ) =>
+{
+	const data = req.body
+	try {
+		await Carts.destroy( {
+			where: {
+				user_id: data.user_id,
+				product_id : data.product_id
+			}
+		} );
+		res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null, msg: "product removed successfully" } );
+	} catch (error) {
+		res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
+	}
+}
+
 module.exports = {
 	getAllCarts,
 	getSingleCart,
-	addProductToCart
+	addProductToCart,
+	removeProductFromCart
 };
