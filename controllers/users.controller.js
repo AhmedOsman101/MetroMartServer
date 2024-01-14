@@ -91,34 +91,6 @@ const login = async ( req, res ) =>// login function
     }
 };
 
-const signup = async (
-	req,
-	res //signup function
-) => {
-	if (Allowed_ips.indexOf(req.ip) !== -1) {
-		const errors = validationResult(req);
-		if (errors.isEmpty()) {
-			const {
-				name,
-				email,
-				password,
-				address1,
-				address2,
-				phone_number,
-				gender,
-				age,
-			} = req.body;
-			const newUser = User.build({
-				name: name,
-				email: email,
-				password: await bcrypt.hash(password, 10),
-				address1: address1,
-				address2: address2 ? address2 : null,
-				phone_number: phone_number,
-				gender: gender,
-				age: age,
-			});
-
 const signup = async ( req, res ) => //signup function
 {
     if ( Allowed_ips.indexOf( req.ip ) !== -1 )
