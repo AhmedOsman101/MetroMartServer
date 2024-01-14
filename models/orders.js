@@ -19,7 +19,7 @@ const { DataTypes } = require( 'sequelize' );
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,

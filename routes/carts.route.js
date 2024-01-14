@@ -8,9 +8,11 @@ const verifyToken = require( "../middleware/verfiyToken" )
 
 
 
-cartRoute.get( "/",cartsController.getAllCarts);
+cartRoute.get( "/", verifyToken,cartsController.getAllCarts);
+cartRoute.get( "/getBillingDetails", verifyToken, cartsController.getBillingDetails );
 cartRoute.get( "/getSingleCart",verifyToken, cartsController.getSingleCart );
 cartRoute.post( "/addProductToCart",verifyToken, cartsController.addProductToCart );
+cartRoute.delete( "/removeProductFromCart", verifyToken, cartsController.removeProductFromCart );
 
 
 

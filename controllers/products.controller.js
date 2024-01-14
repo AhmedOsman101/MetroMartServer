@@ -47,9 +47,22 @@ const searchForProducts = async ( req, res ) =>
 }
 
 
+const getProductsByCategory = async ( req, res ) =>
+{
+    const category_id = req.params.category_id
+    try {
+        const products = await Products.findAll( { where: { category_id: category_id } } )
+        if ( products.length == 0 ) { throw new Error( 'no products with this category' ); }
+        res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: products } );
+    } catch (error) {
+        res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
+    }
+}
+
 
 module.exports = {
     getAllProducts,
     getSingleProduct,
-    searchForProducts
+    searchForProducts,
+    getProductsByCategory
 };
