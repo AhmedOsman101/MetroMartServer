@@ -4,6 +4,7 @@ const Carts = require( '../models/orders' );
 const User = require( "../models/users" );
 const Products = require( "../models/products" );
 const bcrypt = require( 'bcryptjs' );
+const { sumQuantities } = require("../utils/sumQuantities")
 
 
 
@@ -31,15 +32,22 @@ const getSingleCart = async ( req, res ) =>
 			where: { user_id : data.user_id }
 		} )
 		if ( userCart.length == 0 ) { throw new Error( 'User has No products in Cart' ); }
-		let cartProductsArr = [] // all products id that in user card
-		userCart.forEach(element => {
-			cartProductsArr.push(element.product_id)
-		} );
 
-		const productsCart = await Products.findAll( {
-			where: { id: cartProductsArr }
-		} );
-		res.send( { status: httpStatusText.SUCCESS, data: productsCart} )
+
+		let productsCart = userCart.map( ( el ) =>
+		{
+			return ({'product_id':el.product_id , 'quantity' : el.quantity})
+		} )
+		productsCart = sumQuantities( productsCart )
+
+		let finalCart =[]
+		for(let item of productsCart)
+		{
+			let product = await Products.findAll( { where: { id: item.product_id } } )
+			finalCart.push({"product_data":product[0],"quantity":item.quantity})
+		}
+		
+		res.send( finalCart );
 
 	} catch ( error )
 	{
