@@ -22,7 +22,7 @@ App.use( "/products", productrouter )
 
 //////////////////////////////   Carts   /////////////////////////////////////////////
 const cartRouter = require( "./routes/carts.route")
-App.use( "/Carts", cartRouter )
+App.use( "/carts", cartRouter )
 
 
 // Start the server and have it listen on the specified port
