@@ -2,19 +2,19 @@
 ### REST Client
 
 ### get all users
-GET http://localhost:5011/user
-Authorization: Bearer abcd
+GET http://localhost:5011/user/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZ21haWwuY29tIiwiaWF0IjoxNzA1MzM4ODgyLCJleHAiOjE3MDU0MjUyODJ9.I1Jo9VCRmU-s6jaHJxNrZTUpCYMyM9irIQY-Ly2Y5vE
 
 
 
 
 ### Login
 POST http://localhost:5011/user/login
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZXhhbXBsZVVzZXIiLCJpYXQiOjE3MDUyNjc5MTV9.-2lT_o_G_tJoWZcpQNk_L7j8HuwqmkvPUE761hKW-8w
-
+Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZXhhbXBsZVVzZXIiLCJpYXQiOjE3MDUyNjc5MTV9.-2lT_o_G_tJoWZcpQNk_L7j8HuwqmkvPUE761hKW-8w",
+    "email": "example@gmail.com",
+    "password": "jD7R)$)$?Q,bQ8g"
 }
 
 

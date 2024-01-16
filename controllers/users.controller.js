@@ -54,11 +54,11 @@ const login = async ( req, res ) =>// login function
             } );
             if ( user.length > 0 )
             {
-                console.log( user[ 0 ].password, "----", password );
+                // console.log( user[ 0 ].password, "----", password );
                 const matchPassword = await bcrypt.compare( password, user[ 0 ].password );
                 if ( matchPassword )
                 {
-                    const token = await jwt.sign( { email: user[ 0 ].email, id: user[ 0 ]._id }, jwt_secret_key, { expiresIn: '1d' } );
+                    const token = jwt.sign({ email: user[0].email, id: user[0]._id }, jwt_secret_key, { expiresIn: '1d' });
                     user[ 0 ].token = token;
                     res.status( 200 ).send( {
                         status: httpStatusText.SUCCESS,
@@ -82,7 +82,21 @@ const login = async ( req, res ) =>// login function
             }
         } catch ( error )
         {
-            res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.errors[ 0 ].message } );
+            if (error.errors) {
+				res.status(400).send({
+					status: httpStatusText.FAIL,
+					data: null,
+					msg: error.errors[0].message,
+				});
+			} else {
+				// Handle the case when error.errors is undefined
+				res.status(400).send({
+					status: httpStatusText.FAIL,
+					data: null,
+					msg: error.message,
+				});
+			}
+
         }
         
     } else
@@ -113,7 +127,7 @@ const signup = async ( req, res ) => //signup function
             
             try
             {
-                const token = await jwt.sign( { email: newUser.email, id: newUser._id }, jwt_secret_key, { expiresIn: '1d' } );
+                const token = jwt.sign({ email: newUser.email, id: newUser._id }, jwt_secret_key, { expiresIn: '1d' });
                 newUser.token = token
                 await newUser.save();
                 res.status( 201 ).send( {
