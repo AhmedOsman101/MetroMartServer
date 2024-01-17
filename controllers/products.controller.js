@@ -2,6 +2,7 @@ const { validationResult } = require( 'express-validator' );
 const httpStatusText = require( "../utils/httpStatustext" );
 const Products = require( '../models/products' );
 const bcrypt = require( 'bcryptjs' );
+const Sequelize = require( 'sequelize' );
 
 
 
