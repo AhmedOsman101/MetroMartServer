@@ -55,7 +55,6 @@ const searchForProducts = async (req, res) => {
 };
 
 
-
 const getProductsByCategory = async ( req, res ) =>
 {
     const category_id = req.params.category_id

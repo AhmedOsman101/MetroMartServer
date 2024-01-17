@@ -54,11 +54,10 @@ const login = async ( req, res ) =>// login function
             } );
             if ( user.length > 0 )
             {
-                // console.log( user[ 0 ].password, "----", password );
                 const matchPassword = await bcrypt.compare( password, user[ 0 ].password );
                 if ( matchPassword )
                 {
-                    const token = jwt.sign({ email: user[0].email, id: user[0]._id }, jwt_secret_key, { expiresIn: '1d' });
+                    const token = await jwt.sign( { email: user[ 0 ].email, id: user[ 0 ]._id }, jwt_secret_key, { expiresIn: '10d' } );
                     user[ 0 ].token = token;
                     res.status( 200 ).send( {
                         status: httpStatusText.SUCCESS,
@@ -127,7 +126,7 @@ const signup = async ( req, res ) => //signup function
             
             try
             {
-                const token = jwt.sign({ email: newUser.email, id: newUser._id }, jwt_secret_key, { expiresIn: '1d' });
+                const token = await jwt.sign( { email: newUser.email, id: newUser._id }, jwt_secret_key, { expiresIn: '10d' } );
                 newUser.token = token
                 await newUser.save();
                 res.status( 201 ).send( {
