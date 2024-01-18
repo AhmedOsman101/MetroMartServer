@@ -4,11 +4,6 @@ const express = require( 'express' )
 const userrouter = express.Router();
 const verifyToken = require( "../middleware/verfiyToken" )
 
-
-
-
-
-
 userrouter.get( "/", verifyToken,usersController.getAllusers );
 userrouter.post( "/login", usersController.login );
 
@@ -64,10 +59,8 @@ userrouter.put( "/updateaccount", verifyToken, body( "name" ).notEmpty().withMes
     } ), usersController.updateAccount );
 
 // handle any other requests
-userrouter.use( ( req, res ) =>
-{
-    res.status(404).send( "ERROR-404 Page Was Not Found" ); // Send back an error message as a response
-} );
-
+userrouter.use((req, res) => {
+	res.status(404).send("ERROR-404: Page Was Not Found"); // Send back an error message as a response
+});
 
 module.exports = userrouter;
