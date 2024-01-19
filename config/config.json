@@ -1,0 +1,23 @@
+{
+	"development": {
+		"username": "freedb_Yassenmohamed",
+		"password": "76nU@nH$Gms%eVZ",
+		"database": "freedb_Metromart",
+		"host": "sql.freedb.tech",
+		"dialect": "mysql"
+	},
+	"test": {
+		"username": "root",
+		"password": null,
+		"database": "database_test",
+		"host": "127.0.0.1",
+		"dialect": "mysql"
+	},
+	"production": {
+		"username": "root",
+		"password": null,
+		"database": "database_production",
+		"host": "127.0.0.1",
+		"dialect": "mysql"
+	}
+}
