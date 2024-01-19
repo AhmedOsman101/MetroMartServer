@@ -63,6 +63,7 @@ const login = async (req, res) => {
 					res.status(200).send({
 						status: httpStatusText.SUCCESS,
 						data: {
+							id: user[0].id,
 							name: user[0].name,
 							email: user[0].email,
 							address1: user[0].address1,
@@ -149,8 +150,9 @@ const signup = async (req, res) => {
 				res.status(201).send({
 					status: httpStatusText.SUCCESS,
 					data: {
-						user_name: newUser.name,
-						user_email: newUser.email,
+						id: newUser.id,
+						name: newUser.name,
+						email: newUser.email,
 						address1: address1,
 						address2: address2 ? address2 : null,
 						phone_number: phone_number,

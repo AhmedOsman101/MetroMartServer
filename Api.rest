@@ -24,7 +24,7 @@ Content-Type: application/json
 
 {
     "name": "ahmad",
-    "email": "example123123a12a3@gmail.com",
+    "email": "example123123az2a3@gmail.com",
     "password": "AmE*X-Ln7b}FE^wa",
     "address1": "123 fake st.",
     "address2": "123 fake st.",
