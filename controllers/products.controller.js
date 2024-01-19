@@ -37,7 +37,7 @@ const searchForProducts = async (req, res) => {
 				name: Sequelize.where(
 					Sequelize.fn("LOWER", Sequelize.col("name")),
 					"LIKE",
-					productName + "%"
+					"%"+productName + "%"
 				),
 			},
 		});
