@@ -282,9 +282,9 @@ const updateAccount = async (req, res) => {
 								{
 									name: name,
 									email: email,
-									password: new_password,
+									password: await bcrypt.hash(new_password, 10),
 									address1: address1,
-									address2: address2,
+									address2: address2 ? address2 : null,
 									phone_number: phone_number,
 									gender: gender,
 									age: age,

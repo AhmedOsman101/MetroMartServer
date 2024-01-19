@@ -32,11 +32,11 @@ userrouter.post( "/signup",
 
 
 // Handle DELETE requests to remove users
-userrouter.delete( "/deleteaccount", verifyToken, usersController.deleteAccount );
+userrouter.delete( "/deleteAccount", verifyToken, usersController.deleteAccount );
 
 
 // Handle PUT requests to update users
-userrouter.put( "/updateaccount", verifyToken, body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
+userrouter.put( "/updateAccount", verifyToken, body( "name" ).notEmpty().withMessage( "name cannot be empty" ),
     body( "email" ).notEmpty().withMessage( "email is required" ).isEmail(),
     body( "password" ).notEmpty().isStrongPassword().withMessage( "weak password" ),
     body( "address1" ).notEmpty().withMessage( "address cannot be empty" ).isString(),
