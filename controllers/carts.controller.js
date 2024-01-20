@@ -37,11 +37,11 @@ const getBillingDetails = async ( req, res ) =>
 
 const getSingleCart = async ( req, res ) =>
 {
-	const data = req.body
+	const userId = req.params.userId
 	try
 	{
 		const userCart = await Carts.findAll( {
-			where: { user_id : data.user_id }
+			where: { user_id: userId }
 		} )
 		let finalCart = []
 		for (let product of userCart) {
