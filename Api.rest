@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wb
 
 ### get all products
 
-GET http://localhost:5011/products/1
+GET http://localhost:5011/products/
 
 ### search for products
 
