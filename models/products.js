@@ -34,7 +34,7 @@ const Products = sequelize.define(
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
-		rating: {
+		rate: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
