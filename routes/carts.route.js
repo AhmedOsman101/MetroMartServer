@@ -13,6 +13,7 @@ cartRoute.get( "/getBillingDetails", verifyToken, cartsController.getBillingDeta
 cartRoute.get( "/getSingleCart/:userId",verifyToken, cartsController.getSingleCart );
 cartRoute.post( "/addProductToCart",verifyToken, cartsController.addProductToCart );
 cartRoute.delete( "/removeProductFromCart", verifyToken, cartsController.removeProductFromCart );
+cartRoute.delete( "/removeAllProductsFromCart", verifyToken, cartsController.removeAllProductsFromCart );
 
 
 
