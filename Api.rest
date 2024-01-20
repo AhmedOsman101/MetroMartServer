@@ -3,7 +3,7 @@
 
 ### get all users
 GET http://localhost:5011/user/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZ21haWwuY29tIiwiaWF0IjoxNzA1NDM0Mzc2LCJleHAiOjE3MDU1MjA3NzZ9.V4Iso84Fkzk90187XYHH6U3sAao9V7YzVoEbtzRrubM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZ21haWwuY29tIiwiaWF0IjoxNzA1NzE5NzAzLCJleHAiOjE3MDY1ODM3MDN9.6GumScliTcCCFws3hjAYo21IKFNKaUe0T9qppyXYjNY
 
 
 
