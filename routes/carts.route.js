@@ -10,9 +10,10 @@ const verifyToken = require( "../middleware/verfiyToken" )
 
 cartRoute.get( "/", verifyToken,cartsController.getAllCarts);
 cartRoute.get( "/getBillingDetails", verifyToken, cartsController.getBillingDetails );
-cartRoute.get( "/getSingleCart/:user_id",verifyToken, cartsController.getSingleCart );
+cartRoute.get( "/getSingleCart/:userId",verifyToken, cartsController.getSingleCart );
 cartRoute.post( "/addProductToCart",verifyToken, cartsController.addProductToCart );
 cartRoute.delete( "/removeProductFromCart", verifyToken, cartsController.removeProductFromCart );
+cartRoute.delete( "/removeAllProductsFromCart", verifyToken, cartsController.removeAllProductsFromCart );
 
 
 

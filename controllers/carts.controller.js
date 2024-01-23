@@ -37,11 +37,11 @@ const getBillingDetails = async ( req, res ) =>
 
 const getSingleCart = async ( req, res ) =>
 {
-	const userId = req.params.user_id
+	const userId = req.params.userId
 	try
 	{
 		const userCart = await Carts.findAll( {
-			where: { user_id : userId }
+			where: { user_id: userId }
 		} )
 		let finalCart = []
 		for (let product of userCart) {
@@ -128,10 +128,26 @@ const removeProductFromCart =  async ( req, res ) =>
 	}
 }
 
+const removeAllProductsFromCart =  async ( req, res ) =>
+{
+	const data = req.body
+	try {
+		await Carts.destroy( {
+			where: {
+				user_id: data.user_id,
+			}
+		} );
+		res.status( 200 ).send( { status: httpStatusText.SUCCESS, data: null, msg: "user cart removed successfully" } );
+	} catch (error) {
+		res.status( 400 ).send( { status: httpStatusText.FAIL, data: null, msg: error.message } );
+	}
+}
+
 module.exports = {
 	getAllCarts,
 	getSingleCart,
 	addProductToCart,
 	removeProductFromCart,
-	getBillingDetails
+	getBillingDetails,
+	removeAllProductsFromCart
 };
