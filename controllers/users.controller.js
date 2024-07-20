@@ -1,10 +1,5 @@
 /*database connection*/
-const {
-	Admins_ip,
-	Allowed_ips,
-	connection,
-	sequelize,
-} = require("../data/dbconn");
+const { Admins_ip, Allowed_ips } = require("../data/dbconn");
 const { validationResult } = require("express-validator");
 const httpStatusText = require("../utils/httpStatusText");
 const User = require("../models/user");
@@ -15,7 +10,7 @@ require("dotenv").config();
 const jwt_secret_key = process.env.JWT_SECRET_KEY;
 
 // get all users' data from database
-const getAllusers = async (req, res) => {
+const getAllUsers = async (req, res) => {
 	if (Admins_ip.indexOf(req.ip) !== -1) {
 		try {
 			const users = await User.findAll();
@@ -346,7 +341,7 @@ const updateAccount = async (req, res) => {
 };
 
 module.exports = {
-	getAllusers,
+	getAllUsers,
 	login,
 	signup,
 	deleteAccount,

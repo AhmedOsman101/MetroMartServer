@@ -1,10 +1,7 @@
-const { validationResult } = require("express-validator");
 const httpStatusText = require("../utils/httpStatusText");
 const Carts = require("../models/order");
 const User = require("../models/user");
 const Products = require("../models/product");
-const bcrypt = require("bcryptjs");
-const { sumQuantities } = require("../utils/sumQuantities");
 
 const getAllCarts = async (req, res) => {
 	try {

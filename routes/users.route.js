@@ -4,7 +4,7 @@ const express = require("express");
 const userRouter = express.Router();
 const verifyToken = require("../middleware/verifyToken");
 
-userRouter.get("/", verifyToken, usersController.getAllusers);
+userRouter.get("/", verifyToken, usersController.getAllUsers);
 userRouter.post("/login", usersController.login);
 
 userRouter.post(
