@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const httpStatusText = require("../utils/httpStatustext");
+const httpStatusText = require("../utils/httpStatusText");
 const Carts = require("../models/order");
 const User = require("../models/user");
 const Products = require("../models/product");

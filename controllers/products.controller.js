@@ -1,4 +1,4 @@
-const httpStatusText = require("../utils/httpStatustext");
+const httpStatusText = require("../utils/httpStatusText");
 const Products = require("../models/product");
 const { Sequelize } = require("sequelize");
 

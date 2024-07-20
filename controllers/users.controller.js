@@ -6,7 +6,7 @@ const {
 	sequelize,
 } = require("../data/dbconn");
 const { validationResult } = require("express-validator");
-const httpStatusText = require("../utils/httpStatustext");
+const httpStatusText = require("../utils/httpStatusText");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
