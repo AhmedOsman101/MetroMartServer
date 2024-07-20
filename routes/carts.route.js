@@ -1,23 +1,34 @@
-const cartsController = require( "../controllers/carts.controller" );
+const cartsController = require("../controllers/carts.controller");
 // const { body, validationResult } = require( 'express-validator' );
-const express = require( 'express' );
-const cartRoute = express.Router();
-const verifyToken = require( "../middleware/verfiyToken" )
+const express = require("express");
+const cartRouter = express.Router();
+const verifyToken = require("../middleware/verifyToken");
 
+cartRouter.get("/", verifyToken, cartsController.getAllCarts);
+cartRouter.get(
+	"/getBillingDetails",
+	verifyToken,
+	cartsController.getBillingDetails,
+);
+cartRouter.get(
+	"/getSingleCart/:userId",
+	verifyToken,
+	cartsController.getSingleCart,
+);
+cartRouter.post(
+	"/addProductToCart",
+	verifyToken,
+	cartsController.addProductToCart,
+);
+cartRouter.delete(
+	"/removeProductFromCart",
+	verifyToken,
+	cartsController.removeProductFromCart,
+);
+cartRouter.delete(
+	"/removeAllProductsFromCart",
+	verifyToken,
+	cartsController.removeAllProductsFromCart,
+);
 
-
-
-
-cartRoute.get( "/", verifyToken,cartsController.getAllCarts);
-cartRoute.get( "/getBillingDetails", verifyToken, cartsController.getBillingDetails );
-cartRoute.get( "/getSingleCart/:userId",verifyToken, cartsController.getSingleCart );
-cartRoute.post( "/addProductToCart",verifyToken, cartsController.addProductToCart );
-cartRoute.delete( "/removeProductFromCart", verifyToken, cartsController.removeProductFromCart );
-cartRoute.delete( "/removeAllProductsFromCart", verifyToken, cartsController.removeAllProductsFromCart );
-
-
-
-
-
-
-module.exports = cartRoute;
+module.exports = cartRouter;

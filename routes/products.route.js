@@ -1,17 +1,13 @@
-const productsController = require( "../controllers/products.controller" );
-const { body, validationResult } = require( 'express-validator' );
-const express = require( 'express' );
-const productrouter = express.Router();
+const productsController = require("../controllers/products.controller");
+const express = require("express");
+const productRouter = express.Router();
 
+productRouter.get("/", productsController.getAllProducts);
+productRouter.get("/:id", productsController.getSingleProduct);
+productRouter.get("/search/:search", productsController.searchForProducts);
+productRouter.get(
+	"/getProductsByCategory/:category_id",
+	productsController.getProductsByCategory,
+);
 
-productrouter.get( "/", productsController.getAllProducts );
-productrouter.get( "/:id", productsController.getSingleProduct );
-productrouter.get( "/search/:search", productsController.searchForProducts );
-productrouter.get( "/getProductsByCategory/:category_id", productsController.getProductsByCategory );
-
-
-
-
-
-module.exports = productrouter
-
+module.exports = productRouter;

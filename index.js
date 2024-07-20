@@ -17,12 +17,12 @@ const usersRouter = require("./routes/users.route");
 App.use("/user", usersRouter);
 
 //////////////////////////////   Products   /////////////////////////////////////////////
-const productrouter = require( "./routes/products.route" );
-App.use( "/products", productrouter )
+const productRouter = require("./routes/products.route");
+App.use("/products", productRouter);
 
 //////////////////////////////   Carts   /////////////////////////////////////////////
-const cartRouter = require( "./routes/carts.route")
-App.use( "/carts", cartRouter )
+const cartRouterr = require("./routes/carts.route");
+App.use("/carts", cartRouterr);
 
 // Make the Database connection then Start the server
 connection().then(() => {

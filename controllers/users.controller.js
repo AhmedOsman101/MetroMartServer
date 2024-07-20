@@ -7,7 +7,7 @@ const {
 } = require("../data/dbconn");
 const { validationResult } = require("express-validator");
 const httpStatusText = require("../utils/httpStatustext");
-const User = require("../models/users");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -51,13 +51,13 @@ const login = async (req, res) => {
 			if (user.length > 0) {
 				const matchPassword = await bcrypt.compare(
 					password,
-					user[0].password
+					user[0].password,
 				);
 				if (matchPassword) {
 					const token = await jwt.sign(
 						{ email: user[0].email, id: user[0]._id },
 						jwt_secret_key,
-						{ expiresIn: "10d" }
+						{ expiresIn: "10d" },
 					);
 					user[0].token = token;
 					res.status(200).send({
@@ -143,7 +143,7 @@ const signup = async (req, res) => {
 				const token = await jwt.sign(
 					{ email: newUser.email, id: newUser._id },
 					jwt_secret_key,
-					{ expiresIn: "10d" }
+					{ expiresIn: "10d" },
 				);
 				newUser.token = token;
 				await newUser.save();
@@ -181,7 +181,7 @@ const signup = async (req, res) => {
 				status: httpStatusText.FAIL,
 				data: null,
 				msg: "authentication refused",
-			})
+			}),
 		);
 	}
 };
@@ -200,7 +200,7 @@ const deleteAccount = async (req, res) => {
 			if (user.length > 0) {
 				const matchPassword = await bcrypt.compare(
 					password,
-					user[0].password
+					user[0].password,
 				);
 				if (matchPassword) {
 					try {
@@ -276,7 +276,7 @@ const updateAccount = async (req, res) => {
 				if (user.length > 0) {
 					const matchPassword = await bcrypt.compare(
 						password,
-						user[0].password
+						user[0].password,
 					);
 					if (matchPassword) {
 						try {
@@ -284,7 +284,10 @@ const updateAccount = async (req, res) => {
 								{
 									name: name,
 									email: email,
-									password: await bcrypt.hash(new_password, 10),
+									password: await bcrypt.hash(
+										new_password,
+										10,
+									),
 									address1: address1,
 									address2: address2 ? address2 : null,
 									phone_number: phone_number,
@@ -295,7 +298,7 @@ const updateAccount = async (req, res) => {
 									where: {
 										email: email,
 									},
-								}
+								},
 							);
 							res.status(200).send({
 								status: httpStatusText.SUCCESS,
