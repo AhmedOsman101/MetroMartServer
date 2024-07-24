@@ -21,8 +21,8 @@ const productRouter = require("./routes/products.route");
 App.use("/products", productRouter);
 
 //////////////////////////////   Carts   /////////////////////////////////////////////
-const cartRouterr = require("./routes/carts.route");
-App.use("/carts", cartRouterr);
+const cartRouter = require("./routes/carts.route");
+App.use("/carts", cartRouter);
 
 // Make the Database connection then Start the server
 connection().then(() => {

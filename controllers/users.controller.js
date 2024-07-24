@@ -38,7 +38,7 @@ const login = async (req, res) => {
 	if (Allowed_ips.indexOf(req.ip) !== -1) {
 		const { email, password } = req.body;
 		try {
-			const user = await User.findAll({
+			const user = await User.findOne({
 				where: {
 					email: email,
 				},
@@ -46,28 +46,28 @@ const login = async (req, res) => {
 			if (user.length > 0) {
 				const matchPassword = await bcrypt.compare(
 					password,
-					user[0].password,
+					user.password
 				);
 				if (matchPassword) {
 					const token = await jwt.sign(
-						{ email: user[0].email, id: user[0]._id },
+						{ email: user.email, id: user._id },
 						jwt_secret_key,
-						{ expiresIn: "10d" },
+						{ expiresIn: "10d" }
 					);
-					user[0].token = token;
+					user.token = token;
 					res.status(200).send({
 						status: httpStatusText.SUCCESS,
 						data: {
-							id: user[0].id,
-							name: user[0].name,
-							email: user[0].email,
-							address1: user[0].address1,
-							address2: user[0].address2 || null,
-							phone_number: user[0].phone_number,
-							age: user[0].age,
-							gender: user[0].gender,
+							id: user.id,
+							name: user.name,
+							email: user.email,
+							address1: user.address1,
+							address2: user.address2 || null,
+							phone_number: user.phone_number,
+							age: user.age,
+							gender: user.gender,
 						},
-						token: user[0].token,
+						token: user.token,
 					});
 				} else {
 					res.status(400).send({
@@ -138,7 +138,7 @@ const signup = async (req, res) => {
 				const token = await jwt.sign(
 					{ email: newUser.email, id: newUser._id },
 					jwt_secret_key,
-					{ expiresIn: "10d" },
+					{ expiresIn: "10d" }
 				);
 				newUser.token = token;
 				await newUser.save();
@@ -176,7 +176,7 @@ const signup = async (req, res) => {
 				status: httpStatusText.FAIL,
 				data: null,
 				msg: "authentication refused",
-			}),
+			})
 		);
 	}
 };
@@ -195,7 +195,7 @@ const deleteAccount = async (req, res) => {
 			if (user.length > 0) {
 				const matchPassword = await bcrypt.compare(
 					password,
-					user[0].password,
+					user[0].password
 				);
 				if (matchPassword) {
 					try {
@@ -271,7 +271,7 @@ const updateAccount = async (req, res) => {
 				if (user.length > 0) {
 					const matchPassword = await bcrypt.compare(
 						password,
-						user[0].password,
+						user[0].password
 					);
 					if (matchPassword) {
 						try {
@@ -281,7 +281,7 @@ const updateAccount = async (req, res) => {
 									email: email,
 									password: await bcrypt.hash(
 										new_password,
-										10,
+										10
 									),
 									address1: address1,
 									address2: address2 ? address2 : null,
@@ -293,7 +293,7 @@ const updateAccount = async (req, res) => {
 									where: {
 										email: email,
 									},
-								},
+								}
 							);
 							res.status(200).send({
 								status: httpStatusText.SUCCESS,
